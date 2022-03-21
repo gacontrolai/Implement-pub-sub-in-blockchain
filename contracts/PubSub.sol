@@ -6,7 +6,7 @@ contract PubSub {
     mapping (bytes32 => Devices) userDevices; // deviceID to device
     mapping (bytes32 => bool) public usedId; // deviceID to bool
     mapping (bytes32 => mapping ( bytes32 => SensorData) ) devicesData; // from deviceID to dataID 
-    mapping (bytes32 => mapping  (address => bytes32)) rek; // from dataID to DU address to rek 
+    mapping (bytes32 => string) rek; // from dataID to DU address to rek 
     mapping (bytes32 =>  bytes32) keyData;
     struct Devices {
         address owner;
@@ -33,16 +33,18 @@ contract PubSub {
         emit Register(msg.sender, deviceID, _decribe, pricePerDay);
     }
 
-    function publish (bytes32 deviceID , bytes32 dataID , bytes32 keyID,uint256 _from, uint256 _to, string calldata _uri ) external {
-        require(usedId[deviceID]  == true, "Pubsub: deviceID not found ");
-        keyData[dataID] = keyID;
-        devicesData[deviceID][dataID]= SensorData(_uri,_from,_to);
+    function isUsed (bytes32 id) public view returns (bool used){
+        used = usedId[id];
     }
 
-    function createKey (bytes32 keyID , address [] calldata listSub, bytes32 [] calldata listRek ) external {
-        for (uint256 count =0; count < listSub.length; count =count +1 ){
-            rek[keyID][listSub[count]] = listRek[count];
-        } 
+    function publish (bytes32 deviceID , bytes32 dataID , bytes32 keyID,uint256 _from, uint256 _to, string calldata _uri ) external {
+        keyData[dataID] = keyID;
+        devicesData[deviceID][dataID]= SensorData(_uri,_from,_to);
+        emit newData( deviceID ,  dataID ,  keyID, _from,  _to,   _uri);
+    }
+
+    function createKey (bytes32 keyID , string calldata _uri ) external {
+        rek[keyID]= _uri;
     }
 
     function subcribe (bytes32 deviceID ,uint256 _from, uint256 _to, bytes32 _pubKey) external payable {
@@ -56,8 +58,8 @@ contract PubSub {
         devicesData[deviceID][dataID].uri;
     }
 
-    function getRek (bytes32 dataID) external view returns(bytes32) {
+    function getRek (bytes32 dataID) external view returns(string memory) {
         bytes32 keyID = keyData[dataID] ;
-        rek[keyID][msg.sender];
+        return rek[keyID];
     }
 }

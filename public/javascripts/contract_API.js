@@ -12,6 +12,10 @@ async function register(deviceID, _decribe, pricePerDay) {
 	await method.register(deviceID, _decribe, pricePerDay).send({ from: account });
 }
 
+async function createKey(keyID, listSub) {
+	await method.createKey(keyID, listSub).send({ from: account });
+}
+
 async function mintTo(data, address) {
 	// const account = await getCurrentAccount();
 	await method

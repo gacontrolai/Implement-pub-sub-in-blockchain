@@ -18,7 +18,7 @@
 		<div class="card-group">
 			<div class="card">
 				<div class="card-body">
-					<h4 class="card-title">Register device</h4>
+					<h4 class="card-title">New Device</h4>
 					<p>Decribe <textarea name="decribe" id="decribe"> </textarea></p>
 
 					<p>Device ID <input type="text" name="deviceID" id="deviceID" /></p>
@@ -30,7 +30,7 @@
 			</div>
 			<div class="card">
 				<div class="card-body">
-					<h4 class="card-title">Encrypt data and publish data</h4>
+					<h4 class="card-title">Event</h4>
 					<div id="displayEvent" style="height: 300px; overflow-y: scroll"></div>
 				</div>
 			</div>
@@ -38,27 +38,55 @@
 		<div class="card-group">
 			<div class="card">
 				<div class="card-body">
-					<h4 class="card-title">Register device</h4>
-					<!-- <form method="post">
-						<p>Decribe <textarea name="decribe" id="decribe"> </textarea></p>
+					<h4 class="card-title">Create Rek</h4>
+					<form method="post" action="/getKey" target="#">
+						<p>Owner SK: <input type="text" name="sk" id="sk" /></p>
+						<p>Pk<input type="text" name="pk" id="pk" /></p>
+						<p>Subcriber</p>
+						<input type="text" id="listSub" name="listSub" />
 
-						<p>Device ID <input type="text" name="deviceID" id="deviceID" /></p>
-
-						<p>Price: <input type="number" name="price" id="price" /></p>
-						<button onclick="_register()"></button>
-					</form> -->
+						<button type="submit">Get Rek</button>
+					</form>
 				</div>
 			</div>
 			<div class="card">
 				<div class="card-body">
-					<h4 class="card-title">Encrypt data and publish data</h4>
-					<form method="post">
-						<p>Decribe <textarea name="decribe" id=""> </textarea></p>
-
-						<p>Secrete key <input type="text" name="sk" id="" /></p>
-
-						<p>file <input type="file" name="file" id="" /></p>
+					<h4 class="card-title">Encrypt data and post to IPFS</h4>
+					<form method="POST" enctype="multipart/form-data" action="/uploadfile">
+						<p>Public key owner <input type="text" name="pk" id="" /></p>
+						<p>file</p>
+						<input type="file" name="myFile" id="file" accept="application/JSON" />
+						<button type="submit">Submit</button>
 					</form>
+				</div>
+			</div>
+		</div>
+		<div class="card-group">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Create key on SC</h4>
+					<form>
+						<p>Key ID</p>
+						<input type="text" id="keyID" />
+						<p>Subcriber</p>
+						<p>uri</p>
+						<input type="text" id="uri" />
+					</form>
+					<button onclick="createRK()">Create key on SC</button>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Publish</h4>
+					<form method="post" action="/getKey" target="#">
+						<p>deviceID : <input type="text" name="deviceID" id="deviceID2" /></p>
+						<p>dataID<input type="text" name="dataID" id="dataID" /></p>
+						<p>keyID : <input type="text" name="sk" id="keyID2" /></p>
+						<p>from<input type="text" name="pk" id="from" /></p>
+						<p>to : <input type="text" name="sk" id="to" /></p>
+						<p>uri<input type="text" name="pk" id="uri2" /></p>
+					</form>
+					<button onclick="pub()">Publish</button>
 				</div>
 			</div>
 		</div>
@@ -74,6 +102,7 @@
 		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
 		crossorigin="anonymous"
 	></script>
+	<script src="/javascripts/rek.js"></script>
 	<!-- web3 -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.4.0/web3.min.js"></script>
 	<script src="/javascripts/metadata.js"></script>
@@ -87,11 +116,22 @@
 			subRegister().on("data", function (event) {
 				str = `<div class="card">
 				<div class="card-body">
-					<h4 class="card-title">Event</h4>
+					<h4 class="card-title">Event register</h4>
 					<p>owner: ${event.returnValues.owner}</p>
 			    <p>id: ${event.returnValues.id}</p>
 			    <p>_decribe: ${event.returnValues._decribe}</p>
 			    <p>price: ${event.returnValues.price}</p>
+				</div>
+			</div>`;
+				$("#displayEvent").append(str);
+			});
+			subPub().on("data", function (event) {
+				str = `<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Event new Data</h4>
+					<p>dataID: ${event.returnValues.dataID}</p>
+			    <p>keyID: ${event.returnValues.keyID}</p>
+			    <p>_uri: ${event.returnValues._uri}</p>
 				</div>
 			</div>`;
 				$("#displayEvent").append(str);
@@ -110,6 +150,33 @@
 			let idInBytes = web3.utils.padLeft(web3.utils.fromAscii(deviceID), 64);
 			await register(idInBytes, decribe, price);
 			$("#bytesID")[0].innerHTML = "ID: " + idInBytes;
+		}
+
+		async function createRK() {
+			keyID = $("#keyID")[0].value;
+			uri = $("#uri")[0].value;
+			let idInBytes = web3.utils.padLeft(web3.utils.fromAscii(keyID), 64);
+			console.log("keyID:" + idInBytes);
+			await createKey(idInBytes, uri);
+		}
+
+		async function pub() {
+			deviceID = $("#deviceID2")[0].value;
+			dataID = $("#dataID")[0].value;
+			keyID = $("#keyID2")[0].value;
+			from = $("#from")[0].value;
+			to = $("#to")[0].value;
+			uri = $("#uri2")[0].value;
+			let deviceInBytes = web3.utils.padLeft(web3.utils.fromAscii(deviceID), 64);
+			let dataInBytes = web3.utils.padLeft(web3.utils.fromAscii(dataID), 64);
+			let keyInBytes = web3.utils.padLeft(web3.utils.fromAscii(keyID), 64);
+			await method.publish(deviceInBytes, dataInBytes, keyInBytes, from, to, uri).send({ from: account });
+		}
+
+		function decode(rk, obj) {
+			reEncryption(rk, obj);
+			let decryptData = decryptData(sk_B, obj);
+			console.log(decryptData);
 		}
 	</script>
 </html>

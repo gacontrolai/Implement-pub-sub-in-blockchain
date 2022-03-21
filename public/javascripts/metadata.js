@@ -1,6 +1,6 @@
 // 0xf17824cb47e4170a7583daa87492df7de4ac0b77;
 // 0xd7d7e14be9baecdb9ff3db1e2fe9376374bc3c52;
-const addressOfContract = "0x11CCF8596A1Be0CB7492152797435eEe7bb2166d";
+const addressOfContract = "0xa4673efDD10b1C675DDC949df4CF2C4c2158e841";
 const abi = [
 	{
 		inputs: [
@@ -10,14 +10,9 @@ const abi = [
 				type: "bytes32",
 			},
 			{
-				internalType: "address[]",
-				name: "listSub",
-				type: "address[]",
-			},
-			{
-				internalType: "bytes32[]",
-				name: "listRek",
-				type: "bytes32[]",
+				internalType: "string",
+				name: "_uri",
+				type: "string",
 			},
 		],
 		name: "createKey",
@@ -282,9 +277,9 @@ const abi = [
 		name: "getRek",
 		outputs: [
 			{
-				internalType: "bytes32",
+				internalType: "string",
 				name: "",
-				type: "bytes32",
+				type: "string",
 			},
 		],
 		stateMutability: "view",

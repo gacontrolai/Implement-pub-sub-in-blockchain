@@ -9,7 +9,8 @@ function test(inputStr) {
 	var sk_B = PRE.Proxy.to_hex(kp_B.get_private_key().to_bytes());
 	var pk_B = PRE.Proxy.to_hex(kp_B.get_public_key().to_bytes());
 
-	console.log(sk_B);
+	console.log("SK: " + sk_B);
+	console.log(typeof sk_B);
 	console.log(pk_B);
 
 	let obj = PRE.encryptData(pk_A, inputStr);
