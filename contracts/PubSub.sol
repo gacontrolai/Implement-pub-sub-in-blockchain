@@ -23,11 +23,12 @@ contract PubSub {
     event Register ( address indexed owner, bytes32 indexed id, string _decribe, uint256 price);
     event Subcribe (address indexed from, address to, bytes32 deviceID,uint256 start, uint256 end, uint256 price, bytes32 pk);
     event newData (bytes32 deviceID , bytes32 dataID , bytes32 keyID,uint256 _from, uint256 _to, string  _uri);
+    event NewKey (bytes32 keyID, string uri);
 
     fallback() external payable {}
 
     function register (bytes32 deviceID, string calldata  _decribe, uint256 pricePerDay) external returns(uint256) {
-        require(usedId[deviceID] != true , "Pubsub: ID already taken");
+        require(isUsed (deviceID),"PubSub: Id have been used");
         userDevices[deviceID] = Devices(msg.sender, _decribe, pricePerDay) ;
         usedId[deviceID] = true;
         emit Register(msg.sender, deviceID, _decribe, pricePerDay);
@@ -37,14 +38,21 @@ contract PubSub {
         used = usedId[id];
     }
 
-    function publish (bytes32 deviceID , bytes32 dataID , bytes32 keyID,uint256 _from, uint256 _to, string calldata _uri ) external {
+    function publish (bytes32 deviceID , bytes32 dataID , bytes32 keyID,uint256 _from, uint256 _to, string calldata dataUri ) external {
         keyData[dataID] = keyID;
-        devicesData[deviceID][dataID]= SensorData(_uri,_from,_to);
-        emit newData( deviceID ,  dataID ,  keyID, _from,  _to,   _uri);
+        devicesData[deviceID][dataID]= SensorData(dataUri,_from,_to);
+        emit newData( deviceID ,  dataID ,  keyID, _from,  _to,   dataUri);
     }
 
-    function createKey (bytes32 keyID , string calldata _uri ) external {
-        rek[keyID]= _uri;
+    // function createKey (bytes32 keyID , string calldata _uri ) external {
+    //     require(bytes(rek[keyID]).length == 0, "This key have been used" );
+    //     rek[keyID]= _uri;
+    //     emit NewKey(keyID, _uri);
+    // }
+
+    function updateKey(bytes32 deviceID , bytes32 dataID , bytes32 keyID) public {
+        require(userDevices[deviceID].owner == msg.sender);
+        keyData[dataID] = keyID;
     }
 
     function subcribe (bytes32 deviceID ,uint256 _from, uint256 _to, bytes32 _pubKey) external payable {

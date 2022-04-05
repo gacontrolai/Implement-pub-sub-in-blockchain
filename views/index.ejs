@@ -31,7 +31,9 @@
 			<div class="card">
 				<div class="card-body">
 					<h4 class="card-title">Event</h4>
-					<div id="displayEvent" style="height: 300px; overflow-y: scroll"></div>
+					<div style="height: 300px; overflow-y: scroll">
+						<div class="row" id="displayEvent"></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -114,7 +116,7 @@
 		$(document).ready(async function () {
 			await load();
 			subRegister().on("data", function (event) {
-				str = `<div class="card">
+				str = `<div class="card col-3">
 				<div class="card-body">
 					<h4 class="card-title">Event register</h4>
 					<p>owner: ${event.returnValues.owner}</p>
@@ -127,7 +129,7 @@
 			});
 			subPub().on("data", function (event) {
 				str = `<div class="card">
-				<div class="card-body">
+				<div class="card-body col-3">
 					<h4 class="card-title">Event new Data</h4>
 					<p>dataID: ${event.returnValues.dataID}</p>
 			    <p>keyID: ${event.returnValues.keyID}</p>
@@ -138,6 +140,19 @@
 			});
 		});
 	</script>
+
+	[
+		{
+			id: 1
+			price:1
+			decribe:sadasd
+		},
+		{
+			id: 1
+			price:1
+			decribe:sadasd
+		}
+	]
 
 	<script>
 		async function _register() {
