@@ -74,6 +74,9 @@ router.post("/getKey", async (req, res) => {
 	res.send({ rk: rk, hash: hash });
 });
 
+router.get("/aaaa", (req, res) => {
+	res.render("template.ejs");
+});
 // router.post("/getKey", async (req, res) => {
 // 	sk_A = req.body.sk;
 // 	pk_B = req.body.pk;

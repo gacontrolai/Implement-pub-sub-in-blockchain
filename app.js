@@ -7,6 +7,19 @@ var logger = require("morgan");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 
+var mysql = require("mysql");
+
+// var con = mysql.createConnection({
+// 	host: "localhost",
+// 	user: "root",
+// 	password: "232425",
+// });
+
+// con.connect(function (err) {
+// 	if (err) throw err;
+// 	console.log("Connected!");
+// });
+
 var app = express();
 
 // view engine setup

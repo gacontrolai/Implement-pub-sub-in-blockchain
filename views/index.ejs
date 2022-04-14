@@ -129,7 +129,7 @@
 			});
 			subPub().on("data", function (event) {
 				str = `<div class="card">
-				<div class="card-body col-3">
+				<div class="card-body">
 					<h4 class="card-title">Event new Data</h4>
 					<p>dataID: ${event.returnValues.dataID}</p>
 			    <p>keyID: ${event.returnValues.keyID}</p>
@@ -141,18 +141,7 @@
 		});
 	</script>
 
-	[
-		{
-			id: 1
-			price:1
-			decribe:sadasd
-		},
-		{
-			id: 1
-			price:1
-			decribe:sadasd
-		}
-	]
+	[ { id: 1 price:1 decribe:sadasd }, { id: 1 price:1 decribe:sadasd } ]
 
 	<script>
 		async function _register() {
