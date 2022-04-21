@@ -3,20 +3,19 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-		<link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png" />
-		<link rel="icon" type="image/png" href="./assets/img/favicon.png" />
+		<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png" />
+		<link rel="icon" type="image/png" href="/assets/img/favicon.png" />
 		<title>All Devices</title>
 		<!--     Fonts and icons     -->
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
 		<!-- Nucleo Icons -->
-		<link href="./assets/css/nucleo-icons.css" rel="stylesheet" />
-		<link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
+		<link href="/assets/css/nucleo-icons.css" rel="stylesheet" />
+		<link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
 		<!-- Font Awesome Icons -->
 		<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-		<link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
+		<link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
 		<!-- CSS Files -->
-		<link id="pagestyle" href="./assets/css/argon-dashboard.css?v=2.0.2" rel="stylesheet" />
-		<link href="./assets/css/loader.css" rel="stylesheet" />
+		<link id="pagestyle" href="/assets/css/argon-dashboard.css?v=2.0.2" rel="stylesheet" />
 	</head>
 
 	<body class="g-sidenav-show bg-gray-100">
@@ -54,10 +53,6 @@
 							</div>
 						</div>
 					</div> -->
-				</div>
-
-				<div class="loader-wrapper">
-					<span class="loader"><span class="loader-inner"></span></span>
 				</div>
 
 				<footer class="footer pt-3">
@@ -156,11 +151,11 @@
 			</div>
 		</div>
 		<!--   Core JS Files   -->
-		<script src="/js/core/jquery.min.js"></script>
-		<script src="./assets/js/core/popper.min.js"></script>
-		<script src="./assets/js/core/bootstrap.min.js"></script>
-		<script src="./assets/js/plugins/perfect-scrollbar.min.js"></script>
-		<script src="./assets/js/plugins/smooth-scrollbar.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="/assets/js/core/popper.min.js"></script>
+		<script src="/assets/js/core/bootstrap.min.js"></script>
+		<script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
+		<script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
 		<script>
 			var win = navigator.platform.indexOf("Win") > -1;
 			if (win && document.querySelector("#sidenav-scrollbar")) {
@@ -171,7 +166,7 @@
 			}
 		</script>
 		<!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-		<script src="./assets/js/argon-dashboard.min.js?v=2.0.2"></script>
+		<script src="/assets/js/argon-dashboard.min.js?v=2.0.2"></script>
 		<!-- re-encrypt key js	 -->
 		<script src="/javascripts/rek.js"></script>
 		<!-- web3 -->
@@ -191,54 +186,45 @@
 				"bg-gradient-warning shadow-warning",
 			];
 
-			function newdevice(event) {
+			function newData(event) {
+			     console.log(event)
 				var ran = Math.floor(Math.random() * 5);
 				console.log(ran);
-				str1 = `<div class="card col-3">
-				<div class="card-body">
-					<h4 class="card-title">Event register</h4>
-					<p>owner: ${event.returnValues.owner}</p>
-			    <p>id: ${event.returnValues.id}</p>
-			    <p>_decribe: ${event.returnValues._decribe}</p>
-			    <p>price: ${event.returnValues.price}</p>
-				</div>
-			</div>`;
 				str = `<div class="col-xl-4 col-sm-6 mb-xl-0 mb-4 mt-4">
-            <div class="card">
-              <div class="card-header pb-1">
-                <h5><b>OWNER:</b> ${event.returnValues.owner}</h5>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-8">
-                    <div class="numbers">
-                     
-                      <p class="text-sm mb-0 text-uppercase font-weight-bold">Device Id:</p>
-                      <h5 class="font-weight-bolder">${web3.utils.toAscii(event.returnValues.id)}</h5>
-                      <p class="text-sm mb-0 text-uppercase font-weight-bold">Decribe:</p>
-                      <p class="card-text"> ${event.returnValues._decribe}</p>
-                      <p class="text-sm mb-0 text-uppercase font-weight-bold">Price:</p>
-                      <h5 class="font-weight-bolder">${event.returnValues.price} ETH/day</h5>
-                    </div>
-                  </div>
-                  <div class="col-4 text-end">
-                    <div class="icon icon-shape ${colorList[ran]} text-center rounded-circle">
-                      <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <button class="btn btn-primary col-12" onclick="location.href='./device_data/${event.returnValues.id}';"> View detail</button>
-                </div>
-              </div>
-            </div>
-          </div>`;
+			         <div class="card">
+			           <div class="card-header pb-1">
+			             <h5><b>Data ID:</b> ${event.returnValues.dataID}</h5>
+			           </div>
+			           <div class="card-body">
+			             <div class="row">
+			               <div class="col-8">
+			                 <div class="numbers">
+
+			                   <p class="text-sm mb-0 text-uppercase font-weight-bold">Key ID:</p>
+			                   <h5 class="font-weight-bolder">${web3.utils.toAscii(event.returnValues.keyID)}</h5>
+			                   <p class="text-sm mb-0 text-uppercase font-weight-bold">From:</p>
+			                   <p class="card-text"> ${event.returnValues._from}</p>
+			                      <p class="text-sm mb-0 text-uppercase font-weight-bold">To:</p>
+			                   <p class="card-text"> ${event.returnValues._to}</p>
+			                   <p class="text-sm mb-0 text-uppercase font-weight-bold">Data Uri:</p>
+			                   <h5 class="font-weight-bolder"><a target="#" href="http://localhost:8080//ipfs/${event.returnValues._uri}">${event.returnValues._uri}</a></h5>
+			                 </div>
+			               </div>
+			               <div class="col-4 text-end">
+			                 <div class="icon icon-shape ${colorList[ran]} text-center rounded-circle">
+			                   <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+			                 </div>
+			               </div>
+			             </div>
+			           </div>
+			         </div>
+			       </div>`;
 				$("#listDevice").append(str);
-				$(".loader-wrapper").fadeOut("slow");
 			}
+
 			$(document).ready(async function () {
 				await load();
-				subRegister(newdevice);
+				subPub(<%- `"${deviceID}",`%> newData);
 			});
 		</script>
 	</body>

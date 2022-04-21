@@ -10,13 +10,12 @@ function test(inputStr) {
 	var pk_B = PRE.Proxy.to_hex(kp_B.get_public_key().to_bytes());
 
 	console.log("SK: " + sk_B);
-	console.log(typeof sk_B);
-	console.log(pk_B);
+	console.log("PK:" + pk_B);
 
 	let obj = PRE.encryptData(pk_A, inputStr);
 	console.log(obj);
 	let rk = PRE.generateReEncrytionKey(sk_A, pk_B);
-	console.log(rk);
+	console.log("ReK:" + rk);
 	PRE.reEncryption(rk, obj);
 
 	let decryptData = PRE.decryptData(sk_B, obj);

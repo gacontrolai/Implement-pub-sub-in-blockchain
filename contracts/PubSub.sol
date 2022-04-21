@@ -36,9 +36,9 @@ contract PubSub {
         bytes32 pk
     );
     event newData(
-        bytes32 deviceID,
-        bytes32 dataID,
-        bytes32 keyID,
+        bytes32 indexed deviceID,
+        bytes32 indexed dataID,
+        bytes32 indexed keyID,
         uint256 _from,
         uint256 _to,
         string _uri
@@ -70,16 +70,17 @@ contract PubSub {
         uint256 _to,
         string calldata dataUri
     ) external {
+        require(userDevices[deviceID].owner == msg.sender,"PubSub: You are not the owner of this device");
         keyData[dataID] = keyID;
         devicesData[deviceID][dataID] = SensorData(dataUri, _from, _to);
         emit newData(deviceID, dataID, keyID, _from, _to, dataUri);
     }
 
-    // function createKey (bytes32 keyID , string calldata _uri ) external {
-    //     require(bytes(rek[keyID]).length == 0, "This key have been used" );
-    //     rek[keyID]= _uri;
-    //     emit NewKey(keyID, _uri);
-    // }
+    function createKey (bytes32 keyID , string calldata _uri ) external {
+        require(bytes(rek[keyID]).length == 0, "This key have been used" );
+        rek[keyID]= _uri;
+        emit NewKey(keyID, _uri);
+    }
 
     function updateKey(
         bytes32 deviceID,

@@ -9,7 +9,8 @@ async function getused(deviceID) {
 }
 
 async function register(deviceID, _decribe, pricePerDay) {
-	await method.register(deviceID, _decribe, pricePerDay).send({ from: account });
+	haha = await method.register(deviceID, _decribe, pricePerDay).send({ from: account });
+	return haha;
 }
 
 async function createKey(keyID, listSub) {
