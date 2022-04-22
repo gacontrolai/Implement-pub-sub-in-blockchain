@@ -1,33 +1,49 @@
 .loader-wrapper {
-	width: 30%;
-	height: 30%;
+	width: 100%;
+	height: 100%;
 	position: absolute;
 	margin: auto;
 	top: 0;
 	left: 0;
 	bottom: 0;
 	right: 0;
-	background-color: #242f3f;
+	background-color: #242f3f8d;
+	flex-direction: column;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	z-index: 10;
 }
 .loader {
 	display: inline-block;
-	width: 30px;
-	height: 30px;
+	width: 70px;
+	height: 70px;
 	position: relative;
-	border: 4px solid #fff;
+	border: 4px solid rgb(90, 52, 52);
 	animation: loader 2s infinite ease;
 }
 .loader-inner {
 	vertical-align: top;
 	display: inline-block;
 	width: 100%;
-	background-color: #fff;
+	background-color: rgb(90, 52, 52);
 	animation: loader-inner 2s infinite ease-in;
 }
-
+.contain-loader {
+	height: 40%;
+	width: 30%;
+	background-color: aliceblue;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+.loader-text {
+	font-size: xx-large;
+	font-weight: 500;
+	color: rgb(90, 52, 52);
+}
 @keyframes loader {
 	0% {
 		transform: rotate(0deg);

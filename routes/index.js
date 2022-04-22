@@ -6,7 +6,22 @@ const fs = require("fs");
 const PRE = require("recrypt-js");
 const { stringify } = require("querystring");
 const { create } = require("ipfs-http-client");
+const bcrypt = require("bcrypt");
+const { AES, enc } = require("crypto-js");
+
 const ipfs = create();
+
+var mysql = require("mysql");
+
+require("dotenv").config();
+
+var con = mysql.createConnection({
+	host: "localhost",
+	user: "root",
+	password: process.env.DATABASEPASS,
+	database: process.env.DATABASENAME,
+	multipleStatements: true,
+});
 
 // SET STORAGE
 var storage = multer.diskStorage({
@@ -89,6 +104,14 @@ router.get("/device_data/:id", (req, res) => {
 router.get("/register_device", (req, res) => {
 	res.render("register_device.ejs");
 });
+
+router.get("/sign-in", (req, res) => {
+	res.render("sign-in.ejs");
+});
+
+router.get("/sign-up", (req, res) => {
+	res.render("sign-up.ejs");
+});
 // router.post("/getKey", async (req, res) => {
 // 	sk_A = req.body.sk;
 // 	pk_B = req.body.pk;
@@ -102,4 +125,35 @@ router.get("/register_device", (req, res) => {
 
 // 	res.send({ rk: rk, hash: hash });
 // });
+
+router.post("/register", async (req, res) => {
+	let key = PRE.Proxy.generate_key_pair();
+	var sk = PRE.Proxy.to_hex(key.get_private_key().to_bytes());
+	var pk = PRE.Proxy.to_hex(key.get_public_key().to_bytes());
+	var passwordHash = await bcrypt.hash(req.body.password, parseInt(process.env.SALTROUND));
+	var encrypted_sk = AES.encrypt(sk, req.body.password).toString();
+	// console.log(AES.decrypt(encrypted_sk, req.body.password).toString(enc.Utf8));
+	if (req.body.userType == "DU") {
+		getAccount = `SELECT * FROM account WHERE username = "${req.body.username}"`;
+		storeAccount = `INSERT INTO account (username,password, bc_address,private_key,public_key,role) VALUES ('${req.body.username}','${passwordHash}','${req.body.address}','${encrypted_sk}','${pk}','DU');
+		INSERT INTO data_user  VALUES(LAST_INSERT_ID());`;
+	} else {
+		getAccount = `SELECT * FROM account WHERE username = "${req.body.username}"`;
+		storeAccount = `INSERT INTO account (username,password,bc_address,private_key,public_key,role) VALUES ('${req.body.username}','${passwordHash}','${req.body.address}','${encrypted_sk}','${pk}','DO');
+		INSERT INTO data_owner  VALUES(LAST_INSERT_ID());`;
+	}
+	con.query(getAccount, function (err, result) {
+		if (err) throw err;
+		console.log("Result: " + result);
+		if (result.length == 0) {
+			con.query(storeAccount, function (err2, result2) {
+				if (err2) throw err2;
+				console.log(result2);
+				res.send(result2);
+			});
+		} else {
+			res.send("Dulplicate Username");
+		}
+	});
+});
 module.exports = router;
