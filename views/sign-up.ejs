@@ -32,7 +32,6 @@
 		<link id="pagestyle" href="./assets/css/argon-dashboard.css?v=2.0.2" rel="stylesheet" />
 		<link href="./assets/css/loader.css" rel="stylesheet" />
 	</head>
-
 	<body class="">
 		<!-- Navbar -->
 		<nav class="navbar navbar-expand-lg position-absolute top-0 z-index-3 w-100 shadow-none my-3 navbar-transparent mt-4">
@@ -115,6 +114,7 @@
 									action="/register"
 									class="needs-validation"
 									novalidate
+									autocomplete="off"
 									oninput="confirm.setCustomValidity(confirm.value != password.value ? 'Passwords do not match.' : '')"
 								>
 									<div class="mb-3">
@@ -128,7 +128,7 @@
 										<div class="invalid-feedback">Password not match</div>
 									</div>
 									<div class="mb-3">
-										<input type="text" class="form-control" placeholder="Blockchain address" name="address" required />
+										<input type="text" class="form-control" placeholder="Blockchain address" name="address" id="address" required disabled />
 									</div>
 									<div class="form-check">
 										<input class="form-check-input" type="radio" name="userType" value="DU" id="flexRadioDefault1" required />
@@ -195,6 +195,16 @@
 				</div>
 			</div>
 		</footer>
+		<div class="loader-wrapper">
+			<div class="contain-loader">
+				<div class="status-gif"></div>
+				<span class="loader"><span class="loader-inner"></span></span>
+				<div class="text-wrapper">
+					<p class="loader-text">Loading ....</p>
+				</div>
+			</div>
+		</div>
+
 		<!-- -------- END FOOTER 3 w/ COMPANY DESCRIPTION WITH LINKS & SOCIAL ICONS & COPYRIGHT ------- -->
 		<!--   Core JS Files   -->
 		<script src="/js/core/jquery.min.js"></script>
@@ -215,7 +225,11 @@
 		<script async defer src="https://buttons.github.io/buttons.js"></script>
 		<!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
 		<script src="./assets/js/argon-dashboard.min.js?v=2.0.2"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.4.0/web3.min.js"></script>
+		<script src="/javascripts/init.js"></script>
 		<script>
+			$(".loader-wrapper").hide();
+
 			var myForm = document.getElementById("register-form");
 			// myForm.submit(function (event) {
 			// 	if (!myForm.checkValidity()) {
@@ -226,12 +240,14 @@
 			// 	myForm.addClass("was-validated");
 			// });
 			document.getElementById("register-form").addEventListener("submit", function (event) {
-				if (!myForm.checkValidity()) {
-					event.preventDefault();
-					event.stopPropagation();
-				}
-				event.preventDefault();
 				myForm.classList.add("was-validated");
+				event.preventDefault();
+				if (!myForm.checkValidity()) {
+					event.stopPropagation();
+					return;
+				}
+				$(".loader-wrapper").css("display", "flex");
+				$(".loader").show();
 				var form = $(this);
 				var actionUrl = form.attr("action");
 
@@ -240,16 +256,37 @@
 					url: actionUrl,
 					data: form.serialize(), // serializes the form's elements.
 					success: function (data) {
-						alert(data); // show response from the php script.
+						$(".loader-text").addClass("text-success").text("Successful registration");
+						$(".status-gif").addClass("success-gif");
+						$(".loader").hide();
+						setTimeout(() => {
+							$(".loader-wrapper").css("display", "none");
+							window.location.href = "/sign-in";
+						}, 5000);
+					},
+					error: function (data) {
+						console.log(data);
+						$(".loader-text")
+							.addClass("text-danger")
+							.text("Can not register due to: " + data.responseText);
+						$(".status-gif").addClass("fail-gif");
+						$(".loader").hide();
+						setTimeout(() => {
+							$(".loader-wrapper").css("display", "none");
+						}, 5000);
 					},
 				});
 			});
 		</script>
-		<!-- <div class="loader-wrapper">
-			<div class="contain-loader">
-				<span class="loader"><span class="loader-inner"></span></span>
-				<p class="loader-text">Loading ....</p>
-			</div>
-		</div> -->
+		<script>
+			ethereum.on("accountsChanged", function (accounts) {
+				var account = Web3.utils.toChecksumAddress(accounts[0]);
+				$("#address").val(account);
+			});
+			$(document).ready(async function () {
+				var account = Web3.utils.toChecksumAddress(await getCurrentAccount());
+				$("#address").val(account);
+			});
+		</script>
 	</body>
 </html>

@@ -8,6 +8,7 @@ const { stringify } = require("querystring");
 const { create } = require("ipfs-http-client");
 const bcrypt = require("bcrypt");
 const { AES, enc } = require("crypto-js");
+var { checkAuthenticate, checkDataOwner, checkDataUser } = require("../authorize");
 
 const ipfs = create();
 
@@ -92,18 +93,27 @@ router.post("/getKey", async (req, res) => {
 router.get("/aaaa", (req, res) => {
 	res.render("template.ejs");
 });
-router.get("/showdevice", (req, res) => {
-	res.render("show_device.ejs");
-});
+router.get(
+	"/showdevice",
+	/* checkDataUser, */ (req, res) => {
+		res.render("show_device.ejs");
+	}
+);
 
-router.get("/device_data/:id", (req, res) => {
-	console.log("./devie_data:id");
-	res.render("device_data.ejs", { deviceID: req.params.id });
-});
+router.get(
+	"/device_data/:id",
+	/* checkDataUser, */ (req, res) => {
+		console.log("./devie_data:id");
+		res.render("device_data.ejs", { deviceID: req.params.id });
+	}
+);
 
-router.get("/register_device", (req, res) => {
-	res.render("register_device.ejs");
-});
+router.get(
+	"/register_device",
+	/* checkDataUser, */ (req, res) => {
+		res.render("register_device.ejs");
+	}
+);
 
 router.get("/sign-in", (req, res) => {
 	res.render("sign-in.ejs");
@@ -149,11 +159,45 @@ router.post("/register", async (req, res) => {
 			con.query(storeAccount, function (err2, result2) {
 				if (err2) throw err2;
 				console.log(result2);
-				res.send(result2);
+				res.status(200).send("User created");
 			});
 		} else {
-			res.send("Dulplicate Username");
+			res.status(400).send("Dulplicate Username");
 		}
+	});
+});
+
+router.post("/log-in", (req, res) => {
+	let getAccount = `select * from account where username = '${req.body.username}'`;
+	// console.log(req.body);
+	con.query(getAccount, function (err, result) {
+		if (err) throw err;
+		if (result.length == 0) {
+			res.send("No user found");
+		}
+		if (bcrypt.compareSync(req.body.password, result[0].password)) {
+			let account = result[0];
+			req.session.userID = account.id;
+			req.session.role = account.role;
+			req.session.sk = account.private_key;
+			req.session.pk = account.public_key;
+			res.redirect("/showdevice");
+		} else {
+			res.send("Incorrect password");
+		}
+	});
+});
+
+router.post("/store_register_device", (req, res) => {
+	console.log(req.body);
+	let storeDevice = "insert into device(dataOwner_id_mk,price,description,data_period) values ?";
+	let deviceInfo = [[req.body.deviceID, req.session.userID, req.body.price, req.body.decribe]];
+	con.query(storeDevice, deviceInfo, (err, result) => {
+		if (err) {
+			throw err;
+		}
+		res.send(result);
+		console.log(result);
 	});
 });
 module.exports = router;

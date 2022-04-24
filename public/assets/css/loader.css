@@ -32,18 +32,41 @@
 .contain-loader {
 	height: 40%;
 	width: 30%;
-	background-color: aliceblue;
+	background-color: rgb(255, 255, 255);
 	position: absolute;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
 }
+.text-wrapper {
+	text-align: center;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 20px;
+}
 .loader-text {
 	font-size: xx-large;
 	font-weight: 500;
 	color: rgb(90, 52, 52);
 }
+
+.status-gif {
+	height: 200px;
+	width: 200px;
+}
+.success-gif {
+	background: url("/images/12375-green-tick.gif") 50% 50%;
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.fail-gif {
+	background: url("/images/87558-red-cross.gif") 50% 50%;
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
 @keyframes loader {
 	0% {
 		transform: rotate(0deg);

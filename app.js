@@ -8,7 +8,14 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var apiRouter = require("./routes/api");
 
-var mysql = require("mysql");
+var session = require("express-session")({
+	secret: "gacon",
+	resave: false,
+	saveUninitialized: false,
+	cookie: { secure: false },
+});
+
+// var mysql = require("mysql");
 
 // var con = mysql.createConnection({
 // 	host: "localhost",
@@ -22,6 +29,7 @@ var mysql = require("mysql");
 // });
 
 var app = express();
+app.use(session);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
