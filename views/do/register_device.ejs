@@ -47,7 +47,7 @@
 								<h3>Register Device</h3>
 							</div>
 							<div class="card-body p-3">
-								<form action="/store_register_device" method="POST" target="#">
+								<form action="/store_register_device" method="POST" id="register-form" target="#">
 									<div class="form-group row">
 										<div class="col-1">
 											<label for="deviceID" class="col-form-label">Device ID</label>
@@ -77,7 +77,7 @@
 									</div>
 									<div class="form-group row">
 										<div class="col-12 text-center">
-											<button class="btn btn-lg btn-success" onclick="_register()">Register</button>
+											<button type="submit" class="btn btn-lg btn-success">Register</button>
 										</div>
 									</div>
 								</form>
@@ -183,7 +183,7 @@
 			</div>
 		</div>
 	</body>
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="/js/core/jquery.min.js"></script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
 		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
@@ -209,36 +209,44 @@
 	</script>
 
 	<script>
-		async function _register() {
-			decribe = $("#decribe")[0].value;
-			deviceID = $("#deviceID")[0].value;
-			price = $("#price")[0].value;
-			console.log(price);
+		document.getElementById("register-form").addEventListener("submit", function (event) {
+			event.preventDefault();
+			var form = $(this);
+			console.log(form);
+			let inputValue = $("form :input");
+			decribe = inputValue[2].value;
+			deviceID = inputValue[0].value;
+			price = inputValue[1].value;
+			console.log(inputValue);
 			console.log(deviceID);
 			console.log(decribe);
 			let idInBytes = web3.utils.padLeft(web3.utils.fromAscii(deviceID), 64);
-			haha = await register(idInBytes, decribe, price);
-			if (haha) {
-				$("#bytesID")[0].classList.add("text-success");
-				$("#bytesID")[0].innerHTML = "Created success device with ID: " + idInBytes;
+			register(idInBytes, decribe, price)
+				.on("receipt", function (receipt) {
+					$("#bytesID").removeClass("text-danger");
+					$("#bytesID").addClass("text-success");
+					$("#bytesID")[0].innerHTML = "Created success device with ID: " + idInBytes;
 
-				var form = $("form");
-				var actionUrl = form.attr("action");
-				$.ajax({
-					type: "POST",
-					url: "/store_register_device",
-					data: form.serialize(),
-					success: (data) => {
-						console.log(data);
-					},
-					error: (err) => {
-						console.log(data);
-					},
+					var form = $("form");
+					var actionUrl = form.attr("action");
+					$.ajax({
+						type: "POST",
+						url: "/store_register_device",
+						data: form.serialize(),
+						success: (data) => {
+							console.log(data);
+						},
+						error: (err) => {
+							console.log(data);
+						},
+					});
+				})
+				.on("error", function (error, receipt) {
+					$("#bytesID").removeClass("text-success");
+					$("#bytesID").addClass("text-danger");
+					$("#bytesID")[0].innerHTML = "Fail to create device";
+					console.log(error);
 				});
-			} else {
-				$("#bytesID")[0].classList.add("text-danger");
-				$("#bytesID")[0].innerHTML = "Fail to create device";
-			}
-		}
+		});
 	</script>
 </html>

@@ -8,8 +8,8 @@ async function getused(deviceID) {
 	await method.getused(deviceID);
 }
 
-async function register(deviceID, _decribe, pricePerDay) {
-	haha = await method.register(deviceID, _decribe, pricePerDay).send({ from: account });
+function register(deviceID, _decribe, pricePerDay) {
+	haha = method.register(deviceID, _decribe, pricePerDay).send({ from: account });
 	return haha;
 }
 

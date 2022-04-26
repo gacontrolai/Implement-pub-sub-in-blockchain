@@ -93,27 +93,18 @@ router.post("/getKey", async (req, res) => {
 router.get("/aaaa", (req, res) => {
 	res.render("template.ejs");
 });
-router.get(
-	"/showdevice",
-	/* checkDataUser, */ (req, res) => {
-		res.render("show_device.ejs");
-	}
-);
+router.get("/showdevice", checkAuthenticate, (req, res) => {
+	res.render("du/show_device.ejs");
+});
 
-router.get(
-	"/device_data/:id",
-	/* checkDataUser, */ (req, res) => {
-		console.log("./devie_data:id");
-		res.render("device_data.ejs", { deviceID: req.params.id });
-	}
-);
+router.get("/device_data/:id", checkDataUser, (req, res) => {
+	console.log("./devie_data:id");
+	res.render("du/device_data.ejs", { deviceID: req.params.id });
+});
 
-router.get(
-	"/register_device",
-	/* checkDataUser, */ (req, res) => {
-		res.render("register_device.ejs");
-	}
-);
+router.get("/register_device", checkDataOwner, (req, res) => {
+	res.render("do/register_device.ejs");
+});
 
 router.get("/sign-in", (req, res) => {
 	res.render("sign-in.ejs");
@@ -142,6 +133,7 @@ router.post("/register", async (req, res) => {
 	var pk = PRE.Proxy.to_hex(key.get_public_key().to_bytes());
 	var passwordHash = await bcrypt.hash(req.body.password, parseInt(process.env.SALTROUND));
 	var encrypted_sk = AES.encrypt(sk, req.body.password).toString();
+	console.log(req.body);
 	// console.log(AES.decrypt(encrypted_sk, req.body.password).toString(enc.Utf8));
 	if (req.body.userType == "DU") {
 		getAccount = `SELECT * FROM account WHERE username = "${req.body.username}"`;
@@ -177,11 +169,15 @@ router.post("/log-in", (req, res) => {
 		}
 		if (bcrypt.compareSync(req.body.password, result[0].password)) {
 			let account = result[0];
-			req.session.userID = account.id;
+			req.session.userID = account.account_ID;
 			req.session.role = account.role;
 			req.session.sk = account.private_key;
 			req.session.pk = account.public_key;
-			res.redirect("/showdevice");
+			if (account.role == "DU") {
+				res.redirect("/showdevice");
+			} else {
+				res.redirect("/register_device");
+			}
 		} else {
 			res.send("Incorrect password");
 		}
@@ -190,9 +186,9 @@ router.post("/log-in", (req, res) => {
 
 router.post("/store_register_device", (req, res) => {
 	console.log(req.body);
-	let storeDevice = "insert into device(dataOwner_id_mk,price,description,data_period) values ?";
+	let storeDevice = "insert into device(device_id,dataOwner_id_mk,price,description) values ?";
 	let deviceInfo = [[req.body.deviceID, req.session.userID, req.body.price, req.body.decribe]];
-	con.query(storeDevice, deviceInfo, (err, result) => {
+	con.query(storeDevice, [deviceInfo], (err, result) => {
 		if (err) {
 			throw err;
 		}
