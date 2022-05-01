@@ -8,13 +8,18 @@ async function getused(deviceID) {
 	await method.getused(deviceID);
 }
 
-function register(deviceID, _decribe, pricePerDay) {
-	haha = method.register(deviceID, _decribe, pricePerDay).send({ from: account });
+function register(deviceID, deviceName, _decribe, pricePerDay) {
+	var haha = method.register(deviceID, deviceName, _decribe, pricePerDay).send({ from: account });
 	return haha;
 }
 
 async function createKey(keyID, listSub) {
 	await method.createKey(keyID, listSub).send({ from: account });
+}
+
+function subscribe(deviceID, from, to, pk, value) {
+	var haha = method.subscribe(deviceID, from, to, pk).send({ from: account, value: value });
+	return haha;
 }
 
 async function mintTo(data, address) {
@@ -123,4 +128,8 @@ async function getAutho() {
 
 async function requestAutho(acc) {
 	return await method.requestAuthorize(acc).send({ from: account });
+}
+
+function stringToBytes32(str) {
+	return web3.utils.padLeft(web3.utils.fromAscii(str), 64);
 }

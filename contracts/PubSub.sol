@@ -2,12 +2,13 @@
 pragma solidity ^0.8.0;
 
 contract PubSub {
-    uint256 private constant SECADAY = 86400;
+    uint256 private constant SECADAY = 86400000;
     mapping(bytes32 => Devices) userDevices; // deviceID to device
     mapping(bytes32 => bool) public usedId; // deviceID to bool
     mapping(bytes32 => mapping(bytes32 => SensorData)) devicesData; // from deviceID to dataID
     mapping(bytes32 =>  mapping(bytes32 => string)) rek; // from deviceID to dataID to  rek
-    mapping (address => mapping(address => uint256 [] )) transaction; //from DO to DU to arr of fee
+    // mapping (address => mapping(address => uint256 [] )) transaction; //from DO to DU to arr of fee
+    mapping(address => mapping(address => mapping ( bytes32 => uint256))) transactionList; // from DO to DU to transactionID to amount
     struct Devices {
         address owner;
         string name;
@@ -29,11 +30,11 @@ contract PubSub {
         string _decribe,
         uint256 price
     );
-    event Subcribe(
+    event Subscribe(
         address indexed from,
         address indexed to,
         bytes32 indexed deviceID,
-        uint256 txID,
+        bytes32 txID,
         uint256 start,
         uint256 end,
         uint256 price,
@@ -50,7 +51,7 @@ contract PubSub {
         string pk
     );
 
-    event newData(
+    event NewData(
         bytes32 indexed deviceID,
         bytes32 indexed dataID,
         uint256 _from,
@@ -59,6 +60,8 @@ contract PubSub {
         string _keyUri
     );
     event NewKey(bytes32 keyID, string uri);
+
+    event Confirm(address indexed from, address indexed to, bytes32[] dataID, uint256 amount, bytes32 indexed txId);
 
     fallback() external payable {}
 
@@ -89,7 +92,7 @@ contract PubSub {
         require(userDevices[deviceID].owner == msg.sender,"PubSub: You are not the owner of this device");
         rek[deviceID][dataID] = keyUri;
         devicesData[deviceID][dataID] = SensorData(true,dataUri, _from, _to);
-        emit newData(deviceID, dataID, _from, _to, dataUri,keyUri);
+        emit NewData(deviceID, dataID, _from, _to, dataUri,keyUri);
     }
 
     function updateKey(
@@ -102,40 +105,33 @@ contract PubSub {
         rek[deviceID][dataID] = keyUri;
     }
 
-    function subcribe(
+    function subscribe(
         bytes32 deviceID,
         uint256 _from,
         uint256 _to,
         string calldata _pubKey
-    ) external payable returns (uint256)  {
+    ) external payable returns (bytes32)  {
+        require(_from != _to, "Pubsub: can not subscribe to your own device");
+        require(userDevices[deviceID].owner != address(0x0),"Pubsub: device is not registered yet");
+        require(_from < _to,"Pubsub: end time much larger than begin time");
         Devices memory device = userDevices[deviceID];
-        uint256 price = ((_from - _to) / SECADAY) *
-            device.pricePerDay;
+        uint256 price = ((_to - _from) / SECADAY) * device.pricePerDay;
         require(msg.value >= price, "Amount is sufficient");
-        transaction[device.owner][msg.sender].push(price);
-        uint256 txID = transaction[device.owner][msg.sender].length;
+
+        bytes32 txId = keccak256(abi.encodePacked(msg.sender, device.owner, block.timestamp));
         
         payable(this).transfer(price);
-        emit Subcribe(
+        emit Subscribe(
             msg.sender,
             device.owner,
             deviceID,
-            txID,
+            txId,
             _from,
             _to,
             price,
             _pubKey
         );
-        return txID;
-    }
-
-    function buyPackage (bytes32 deviceID, bytes32[] memory dataID, string calldata pk) payable external {
-        Devices memory device = userDevices[deviceID];
-        uint256 totalprice = calPackagePrice(deviceID,dataID);
-        require (msg.value >= totalprice );
-        transaction[device.owner][msg.sender].push(totalprice);
-        uint256 txID = transaction[device.owner][msg.sender].length;
-        emit BuyPackage(msg.sender, device.owner, deviceID, txID, dataID, totalprice, pk);
+        return txId;
     }
 
     function calPackagePrice (bytes32 deviceID, bytes32[] memory dataID) public view returns(uint256){
@@ -148,11 +144,12 @@ contract PubSub {
         return price;
     }
 
-    function confirm (bytes32 deviceID, bytes32[] memory dataID, uint256 txID) external{
+    function confirm (bytes32 deviceID, bytes32[] calldata dataID, bytes32 txId) external{
+        require(userDevices[deviceID].owner != address(0x0),"Pubsub: device is not registered yet");
         Devices memory device = userDevices[deviceID];
         uint256 totalprice = calPackagePrice(deviceID,dataID);
-        uint256 expected = transaction[device.owner][msg.sender][txID];
-        transaction[device.owner][msg.sender][txID] = expected - totalprice;
+        transactionList[device.owner][msg.sender][txId] -= totalprice;
+        emit  Confirm( msg.sender, device.owner, dataID, totalprice, txId);
     }
 
     function getData(bytes32 dataID, bytes32 deviceID)

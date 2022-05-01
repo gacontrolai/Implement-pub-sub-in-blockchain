@@ -5,8 +5,12 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
+var DORouter = require("./routes/dataOwner");
+var DURouter = require("./routes/dataUser");
 var usersRouter = require("./routes/users");
 var apiRouter = require("./routes/api");
+
+const subscribeSC = require("./subscribesEventSC.js");
 
 var session = require("express-session")({
 	secret: "gacon",
@@ -30,6 +34,13 @@ var session = require("express-session")({
 
 var app = express();
 app.use(session);
+subscribeSC();
+
+// console.log("Eth Node Version: ", web3.version.node);
+// //console.log("Network: " ,web3.version.network, web3.version.ethereum);
+// console.log("Connected: ", web3.isConnected(), web3.currentProvider);
+// console.log("syncing: ", web3.eth.syncing, ", Latest Block: ", web3.eth.blockNumber);
+// console.log("Accounts[0]: ", web3.eth.accounts[0], ":", web3.eth.getBalance(web3.eth.accounts[0]).toNumber());
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -44,6 +55,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/api", apiRouter);
+app.use("/DO", DORouter);
+app.use("/DU", DURouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

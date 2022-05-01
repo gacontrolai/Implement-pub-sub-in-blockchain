@@ -17,19 +17,19 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-		<link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png" />
-		<link rel="icon" type="image/png" href="./assets/img/favicon.png" />
+		<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png" />
+		<link rel="icon" type="image/png" href="/assets/img/favicon.png" />
 		<title>Argon Dashboard 2 by Creative Tim</title>
 		<!--     Fonts and icons     -->
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
 		<!-- Nucleo Icons -->
-		<link href="./assets/css/nucleo-icons.css" rel="stylesheet" />
-		<link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
+		<link href="/assets/css/nucleo-icons.css" rel="stylesheet" />
+		<link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
 		<!-- Font Awesome Icons -->
 		<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-		<link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
+		<link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
 		<!-- CSS Files -->
-		<link id="pagestyle" href="./assets/css/argon-dashboard.css?v=2.0.2" rel="stylesheet" />
+		<link id="pagestyle" href="/assets/css/argon-dashboard.css?v=2.0.2" rel="stylesheet" />
 	</head>
 
 	<body class="g-sidenav-show bg-gray-100">
@@ -58,10 +58,18 @@
 									</div>
 									<div class="form-group row">
 										<div class="col-1">
+											<label for="deviceID" class="col-form-label">Device Name</label>
+										</div>
+										<div class="col-6">
+											<input type="text" name="deviceName" id="deviceName" class="form-control" placeholder="" aria-describedby="helpId" />
+										</div>
+									</div>
+									<div class="form-group row">
+										<div class="col-1">
 											<label for="price" class="col-form-label">Price </label>
 										</div>
 										<div class="col-4">
-											<input type="number" name="price" id="price" class="form-control" placeholder="" aria-describedby="helpId" />
+											<input type="number" step="any" name="price" id="price" class="form-control" placeholder="" aria-describedby="helpId" />
 										</div>
 										<div class="col-2">
 											<p id="helpId" class="text-muted">ETH</p>
@@ -81,7 +89,7 @@
 										</div>
 									</div>
 								</form>
-								<div id="bytesID"></div>
+								<div id="bytesID" class="col-md-12 alert h6 text-white"></div>
 							</div>
 						</div>
 					</div>
@@ -214,17 +222,18 @@
 			var form = $(this);
 			console.log(form);
 			let inputValue = $("form :input");
-			decribe = inputValue[2].value;
+			decribe = inputValue[3].value;
 			deviceID = inputValue[0].value;
-			price = inputValue[1].value;
+			deviceName = inputValue[1].value;
+			price = web3.utils.toWei(`${inputValue[2].value}`, "ether");
 			console.log(inputValue);
 			console.log(deviceID);
 			console.log(decribe);
-			let idInBytes = web3.utils.padLeft(web3.utils.fromAscii(deviceID), 64);
-			register(idInBytes, decribe, price)
+			let idInBytes = stringToBytes32(deviceID);
+			register(idInBytes, deviceName, decribe, price)
 				.on("receipt", function (receipt) {
-					$("#bytesID").removeClass("text-danger");
-					$("#bytesID").addClass("text-success");
+					$("#bytesID").removeClass("alert-danger");
+					$("#bytesID").addClass("alert-primary");
 					$("#bytesID")[0].innerHTML = "Created success device with ID: " + idInBytes;
 
 					var form = $("form");
@@ -242,8 +251,8 @@
 					});
 				})
 				.on("error", function (error, receipt) {
-					$("#bytesID").removeClass("text-success");
-					$("#bytesID").addClass("text-danger");
+					$("#bytesID").removeClass("alert-primary");
+					$("#bytesID").addClass("alert-danger");
 					$("#bytesID")[0].innerHTML = "Fail to create device";
 					console.log(error);
 				});

@@ -12,17 +12,7 @@ var { checkAuthenticate, checkDataOwner, checkDataUser } = require("../authorize
 
 const ipfs = create();
 
-var mysql = require("mysql");
-
-require("dotenv").config();
-
-var con = mysql.createConnection({
-	host: "localhost",
-	user: "root",
-	password: process.env.DATABASEPASS,
-	database: process.env.DATABASENAME,
-	multipleStatements: true,
-});
+const con = require("../connectDB.js");
 
 // SET STORAGE
 var storage = multer.diskStorage({
@@ -38,8 +28,7 @@ var upload = multer({ storage: storage });
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-	reencypt("Ai goi tui do");
-	res.render("index", { title: "Express" });
+	res.render("sign-in.ejs");
 });
 
 router.post("/uploadfile", upload.single("myFile"), async (req, res, next) => {
@@ -93,13 +82,19 @@ router.post("/getKey", async (req, res) => {
 router.get("/aaaa", (req, res) => {
 	res.render("template.ejs");
 });
+
 router.get("/showdevice", checkAuthenticate, (req, res) => {
 	res.render("du/show_device.ejs");
 });
 
-router.get("/device_data/:id", checkDataUser, (req, res) => {
+router.get("/device_data", checkDataUser, (req, res) => {
 	console.log("./devie_data:id");
-	res.render("du/device_data.ejs", { deviceID: req.params.id });
+	res.render("du/device_data.ejs", { deviceID: req.query.deviceID });
+});
+
+router.get("/publish_data", checkDataOwner, (req, res) => {
+	console.log("./devie_data:id");
+	res.render("du/device_data.ejs", { deviceID: req.query.deviceID });
 });
 
 router.get("/register_device", checkDataOwner, (req, res) => {
@@ -136,11 +131,11 @@ router.post("/register", async (req, res) => {
 	console.log(req.body);
 	// console.log(AES.decrypt(encrypted_sk, req.body.password).toString(enc.Utf8));
 	if (req.body.userType == "DU") {
-		getAccount = `SELECT * FROM account WHERE username = "${req.body.username}"`;
+		getAccount = `SELECT * FROM account WHERE username = "${req.body.username}" or bc_address = "${req.body.address}"`;
 		storeAccount = `INSERT INTO account (username,password, bc_address,private_key,public_key,role) VALUES ('${req.body.username}','${passwordHash}','${req.body.address}','${encrypted_sk}','${pk}','DU');
 		INSERT INTO data_user  VALUES(LAST_INSERT_ID());`;
 	} else {
-		getAccount = `SELECT * FROM account WHERE username = "${req.body.username}"`;
+		getAccount = `SELECT * FROM account WHERE username = "${req.body.username}" or bc_address = "${req.body.address}"`;
 		storeAccount = `INSERT INTO account (username,password,bc_address,private_key,public_key,role) VALUES ('${req.body.username}','${passwordHash}','${req.body.address}','${encrypted_sk}','${pk}','DO');
 		INSERT INTO data_owner  VALUES(LAST_INSERT_ID());`;
 	}
@@ -154,7 +149,7 @@ router.post("/register", async (req, res) => {
 				res.status(200).send("User created");
 			});
 		} else {
-			res.status(400).send("Dulplicate Username");
+			res.status(400).send("Dulplicate Username or blockchain address");
 		}
 	});
 });
@@ -173,10 +168,11 @@ router.post("/log-in", (req, res) => {
 			req.session.role = account.role;
 			req.session.sk = account.private_key;
 			req.session.pk = account.public_key;
+			res.cookie("pk", account.public_key);
 			if (account.role == "DU") {
-				res.redirect("/showdevice");
+				res.redirect("DU/showdevice");
 			} else {
-				res.redirect("/register_device");
+				res.redirect("DO/register_device");
 			}
 		} else {
 			res.send("Incorrect password");
@@ -187,7 +183,7 @@ router.post("/log-in", (req, res) => {
 router.post("/store_register_device", (req, res) => {
 	console.log(req.body);
 	let storeDevice = "insert into device(device_id,dataOwner_id_mk,price,description) values ?";
-	let deviceInfo = [[req.body.deviceID, req.session.userID, req.body.price, req.body.decribe]];
+	let deviceInfo = [[req.body.deviceID, req.session.userID, Math.round(req.body.price * 10 ** 6), req.body.decribe]];
 	con.query(storeDevice, [deviceInfo], (err, result) => {
 		if (err) {
 			throw err;
@@ -195,5 +191,14 @@ router.post("/store_register_device", (req, res) => {
 		res.send(result);
 		console.log(result);
 	});
+});
+
+router.get("/registered_device", (req, res) => {
+	res.render("do/registered_device");
+});
+
+router.get("/sign-out", function (req, res, next) {
+	req.session.destroy();
+	res.redirect("/sign-in");
 });
 module.exports = router;

@@ -21,7 +21,7 @@
 
 	<body class="g-sidenav-show bg-gray-100">
 		<div class="min-height-300 bg-primary position-absolute w-100"></div>
-		<%- include('sidebar',{"choosing":1}) -%>
+		<%- include('sidebar',{"choosing":3}) -%>
 		<main class="main-content position-relative border-radius-lg">
 			<!-- Navbar -->
 			<%- include('navbar',{}) -%>
@@ -195,7 +195,7 @@
 				"bg-gradient-warning shadow-warning",
 			];
 
-			function newdevice(arrOfEvent) {
+			function ownerDevice(arrOfEvent) {
 				$("#listDevice").empty();
 				arrOfEvent.forEach((event) => {
 					renderNewDevice(event);
@@ -241,7 +241,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <button class="btn btn-primary col-12" onclick="location.href='/device_data?deviceID=${event.returnValues.id}';"> View detail</button>
+                  <button class="btn btn-primary col-12" onclick="location.href='/device_data?deviceID=${event.returnValues.id}';"> Publish Data</button>
                 </div>
               </div>
             </div>
@@ -251,7 +251,7 @@
 			}
 			$(document).ready(async function () {
 				await load();
-				getAllPastRegisterDevice(newdevice);
+				getRegisterDeviceByDO(account, ownerDevice);
 				setTimeout(() => {
 					if ($("#listDevice .card").length == 0) {
 						$(".loader-wrapper").fadeOut("slow");
