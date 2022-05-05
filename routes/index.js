@@ -83,24 +83,6 @@ router.get("/aaaa", (req, res) => {
 	res.render("template.ejs");
 });
 
-router.get("/showdevice", checkAuthenticate, (req, res) => {
-	res.render("du/show_device.ejs");
-});
-
-router.get("/device_data", checkDataUser, (req, res) => {
-	console.log("./devie_data:id");
-	res.render("du/device_data.ejs", { deviceID: req.query.deviceID });
-});
-
-router.get("/publish_data", checkDataOwner, (req, res) => {
-	console.log("./devie_data:id");
-	res.render("du/device_data.ejs", { deviceID: req.query.deviceID });
-});
-
-router.get("/register_device", checkDataOwner, (req, res) => {
-	res.render("do/register_device.ejs");
-});
-
 router.get("/sign-in", (req, res) => {
 	res.render("sign-in.ejs");
 });
@@ -169,6 +151,7 @@ router.post("/log-in", (req, res) => {
 			req.session.sk = account.private_key;
 			req.session.pk = account.public_key;
 			res.cookie("pk", account.public_key);
+			console.log("req.session: ", req.session);
 			if (account.role == "DU") {
 				res.redirect("DU/showdevice");
 			} else {
@@ -178,23 +161,6 @@ router.post("/log-in", (req, res) => {
 			res.send("Incorrect password");
 		}
 	});
-});
-
-router.post("/store_register_device", (req, res) => {
-	console.log(req.body);
-	let storeDevice = "insert into device(device_id,dataOwner_id_mk,price,description) values ?";
-	let deviceInfo = [[req.body.deviceID, req.session.userID, Math.round(req.body.price * 10 ** 6), req.body.decribe]];
-	con.query(storeDevice, [deviceInfo], (err, result) => {
-		if (err) {
-			throw err;
-		}
-		res.send(result);
-		console.log(result);
-	});
-});
-
-router.get("/registered_device", (req, res) => {
-	res.render("do/registered_device");
 });
 
 router.get("/sign-out", function (req, res, next) {

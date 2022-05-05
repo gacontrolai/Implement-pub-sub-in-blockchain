@@ -133,3 +133,13 @@ async function requestAutho(acc) {
 function stringToBytes32(str) {
 	return web3.utils.padLeft(web3.utils.fromAscii(str), 64);
 }
+
+function makeid(length) {
+	var result = "";
+	var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	var charactersLength = characters.length;
+	for (var i = 0; i < length; i++) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
+}
