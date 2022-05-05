@@ -1,5 +1,5 @@
 async function loadContract() {
-	return await new window.web3.eth.Contract(abi, addressOfContract);
+  return await new window.web3.eth.Contract(abi, addressOfContract);
 }
 
 // window.ethereum.on("accountsChanged", function (accounts) {
@@ -24,26 +24,26 @@ async function loadContract() {
 
 // Run contract
 async function load() {
-	console.log("loading ....");
-	await loadWeb3();
-	window.contract = await loadContract();
-	method = window.contract.methods;
-	console.log("Ready!");
+  console.log("loading ....");
+  await loadWeb3();
+  window.contract = await loadContract();
+  method = window.contract.methods;
+  console.log("Ready!");
 }
 
 //load web3
 async function loadWeb3() {
-	if (window.ethereum) {
-		window.web3 = new Web3(window.ethereum);
-		window.ethereum.enable();
-		account = await getCurrentAccount();
-		console.log(account);
-	}
+  if (window.ethereum) {
+    window.web3 = new Web3(window.ethereum);
+    window.ethereum.enable();
+    account = await getCurrentAccount();
+    console.log(account);
+  }
 }
 
 //Get account
 async function getCurrentAccount() {
-	const accounts = await ethereum.request({ method: "eth_accounts" });
-	//   document.getElementById("TaiKhoan").innerHTML = accounts[0];
-	return accounts[0];
+  const accounts = await ethereum.request({ method: "eth_accounts" });
+  //   document.getElementById("TaiKhoan").innerHTML = accounts[0];
+  return accounts[0];
 }

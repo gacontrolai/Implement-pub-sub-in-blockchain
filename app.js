@@ -13,10 +13,10 @@ var apiRouter = require("./routes/api");
 const subscribeSC = require("./subscribesEventSC.js");
 
 var session = require("express-session")({
-	secret: "gacon",
-	resave: false,
-	saveUninitialized: false,
-	cookie: { secure: false },
+  secret: "gacon",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false },
 });
 
 // var mysql = require("mysql");
@@ -60,18 +60,18 @@ app.use("/DU", DURouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-	next(createError(404));
+  next(createError(404));
 });
 
 // error handler
 app.use(function (err, req, res, next) {
-	// set locals, only providing error in development
-	res.locals.message = err.message;
-	res.locals.error = req.app.get("env") === "development" ? err : {};
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get("env") === "development" ? err : {};
 
-	// render the error page
-	res.status(err.status || 500);
-	res.render("error");
+  // render the error page
+  res.status(err.status || 500);
+  res.render("error");
 });
 
 module.exports = app;

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png" />
     <link rel="icon" type="image/png" href="/assets/img/favicon.png" />
-    <title>All Devices</title>
+    <title>All Subscriber</title>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Nucleo Icons -->
@@ -21,40 +21,13 @@
 
   <body class="g-sidenav-show bg-gray-100">
     <div class="min-height-300 bg-primary position-absolute w-100"></div>
-    <%- include('sidebar',{"choosing":1}) -%>
+    <%- include('sidebar',{"choosing":4}) -%>
     <main class="main-content position-relative border-radius-lg">
       <!-- Navbar -->
       <%- include('navbar',{}) -%>
       <!-- End Navbar -->
       <div class="container-fluid py-4">
-        <div id="listDevice" class="row mt-4">
-          <!-- <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-						<div class="card">
-							<div class="card-header">
-								<h4>Day la device</h4>
-							</div>
-							<div class="card-body p-3">
-								<div class="row">
-									<div class="col-8">
-										<div class="numbers">
-											<p class="text-sm mb-0 text-uppercase font-weight-bold">Id:</p>
-											<h5 class="font-weight-bolder">0x0000000002134</h5>
-											<p class="text-sm mb-0 text-uppercase font-weight-bold">Decribe:</p>
-											<p class="card-text">Sensor for temperature</p>
-											<p class="text-sm mb-0 text-uppercase font-weight-bold">Price:</p>
-											<h5 class="font-weight-bolder">1 USD</h5>
-										</div>
-									</div>
-									<div class="col-4 text-end">
-										<div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
-											<i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div> -->
-        </div>
+        <div id="listSubscriber" class="row mt-4"></div>
 
         <footer class="footer pt-3">
           <div class="container-fluid">
@@ -195,43 +168,47 @@
         "bg-gradient-warning shadow-warning",
       ];
 
-      function newdevice(arrOfEvent) {
-        $("#listDevice").empty();
+      function listSubscriber(arrOfEvent) {
+        $("#listSubscriber").empty();
         arrOfEvent.forEach((event) => {
-          renderNewDevice(event);
+          renderSubscriber(event);
         });
         $(".loader-wrapper").fadeOut("slow");
       }
-      function renderNewDevice(event) {
+      function renderSubscriber(event) {
         var ran = Math.floor(Math.random() * 5);
         console.log(ran);
-        str1 = `<div class="card col-3">
-				<div class="card-body">
-					<h4 class="card-title">Event register</h4>
-					<p>owner: ${event.returnValues.owner}</p>
-			    <p>id: ${event.returnValues.id}</p>
-			    <p>_decribe: ${event.returnValues._decribe}</p>
-			    <p>price: ${event.returnValues.price}</p>
-				</div>
-			</div>`;
+        var fromTime = new Date(parseInt(event.returnValues.start)).toDateString();
+        var toTime = new Date(parseInt(event.returnValues.end)).toDateString();
+        function calTotalDate(fromTime, toTime) {
+          if (fromTime > toTime) {
+            return 0;
+          }
+          var duration = toTime - fromTime;
+          var totalDate = duration / 1000 / (60 * 60 * 24);
+          return totalDate;
+        }
         str = `<div class="col-xl-4 col-sm-6 mb-xl-0 mb-4 mt-4">
             <div class="card">
               <div class="card-header pb-1">
-                <h5><b>OWNER:</b> ${event.returnValues.owner}</h5>
+                <h5><b>Subscriber:</b> ${event.returnValues.from}</h5>
               </div>
               <div class="card-body">
                 <div class="row">
                   <div class="col-8">
                     <div class="numbers">
-                     
-                      <p class="text-sm mb-0 text-uppercase font-weight-bold">Device Id:</p>
-                      <h5 class="font-weight-bolder">${event.returnValues.id}</h5>
-											<p class="text-sm mb-0 text-uppercase font-weight-bold">Device Name:</p>
-                      <h5 class="font-weight-bolder">${event.returnValues.deviceName}</h5>
-                      <p class="text-sm mb-0 text-uppercase font-weight-bold">Decribe:</p>
-                      <p class="card-text"> ${event.returnValues._decribe}</p>
-                      <p class="text-sm mb-0 text-uppercase font-weight-bold">Price:</p>
-                      <h5 class="font-weight-bolder">${web3.utils.fromWei(event.returnValues.price, "ether")} ETH/day</h5>
+                      <p class="text-sm mb-0 text-uppercase font-weight-bold">Device ID</p>
+                      <p class="font-weight-bolder">${event.returnValues.deviceID}</p>
+
+					  <p class="text-sm mb-0 text-uppercase font-weight-bold">From:</p>
+                      <p class="card-text">${fromTime}</p>
+
+                      <p class="text-sm mb-0 text-uppercase font-weight-bold">To:</p>
+                      <p class="card-text"> ${toTime}</p>
+
+                      <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Price:</p>
+                      <h5 class="font-weight-bolder">${web3.utils.fromWei(event.returnValues.price, "ether")} Ether</h5>
+					 
                     </div>
                   </div>
                   <div class="col-4 text-end">
@@ -240,22 +217,17 @@
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <button class="btn btn-primary col-12" onclick="location.href='/DU/device_data?deviceID=${
-                    event.returnValues.id
-                  }';"> View detail</button>
-                </div>
               </div>
             </div>
           </div>`;
 
-        $("#listDevice").append(str);
+        $("#listSubscriber").append(str);
       }
       $(document).ready(async function () {
         await load();
-        getAllPastRegisterDevice(newdevice);
+        getSubscriberByDO(account, listSubscriber);
         setTimeout(() => {
-          if ($("#listDevice .card").length == 0) {
+          if ($("#listSubscriber .card").length == 0) {
             $(".loader-wrapper").fadeOut("slow");
             emptyMsg = `<div class="col-12">
 						<div class="card">
@@ -264,7 +236,7 @@
 							</div>
 						</div>
 					</div>`;
-            $("#listDevice").append(emptyMsg);
+            $("#listSubscriber").append(emptyMsg);
           }
         }, 5000);
       });

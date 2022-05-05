@@ -14,248 +14,256 @@
 -->
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-		<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png" />
-		<link rel="icon" type="image/png" href="/assets/img/favicon.png" />
-		<title>Argon Dashboard 2 by Creative Tim</title>
-		<!--     Fonts and icons     -->
-		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-		<!-- Nucleo Icons -->
-		<link href="/assets/css/nucleo-icons.css" rel="stylesheet" />
-		<link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
-		<!-- Font Awesome Icons -->
-		<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-		<link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
-		<!-- CSS Files -->
-		<link id="pagestyle" href="/assets/css/argon-dashboard.css?v=2.0.2" rel="stylesheet" />
-	</head>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png" />
+    <link rel="icon" type="image/png" href="/assets/img/favicon.png" />
+    <title>Argon Dashboard 2 by Creative Tim</title>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <!-- Nucleo Icons -->
+    <link href="/assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link id="pagestyle" href="/assets/css/argon-dashboard.css?v=2.0.2" rel="stylesheet" />
+  </head>
 
-	<body class="g-sidenav-show bg-gray-100">
-		<div class="min-height-300 bg-primary position-absolute w-100"></div>
-		<%- include('sidebar',{choosing:2}) -%>
-		<main class="main-content position-relative border-radius-lg">
-			<!-- Navbar -->
-			<%- include('navbar',{}) -%>
-			<!-- End Navbar -->
-			<div class="container-fluid py-4">
-				<div class="row">
-					<div class="col-12 mb-4">
-						<div class="card">
-							<div class="card-header">
-								<h3>Register Device</h3>
-							</div>
-							<div class="card-body p-3">
-								<form action="/store_register_device" method="POST" id="register-form" target="#">
-									<div class="form-group row">
-										<div class="col-1">
-											<label for="deviceID" class="col-form-label">Device ID</label>
-										</div>
-										<div class="col-6">
-											<input type="text" name="deviceID" id="deviceID" class="form-control" placeholder="" aria-describedby="helpId" />
-										</div>
-									</div>
-									<div class="form-group row">
-										<div class="col-1">
-											<label for="deviceID" class="col-form-label">Device Name</label>
-										</div>
-										<div class="col-6">
-											<input type="text" name="deviceName" id="deviceName" class="form-control" placeholder="" aria-describedby="helpId" />
-										</div>
-									</div>
-									<div class="form-group row">
-										<div class="col-1">
-											<label for="price" class="col-form-label">Price </label>
-										</div>
-										<div class="col-4">
-											<input type="number" step="any" name="price" id="price" class="form-control" placeholder="" aria-describedby="helpId" />
-										</div>
-										<div class="col-2">
-											<p id="helpId" class="text-muted">ETH</p>
-										</div>
-									</div>
-									<div class="form-group row">
-										<div class="col-1">
-											<label for="decribe" class="col-form-label">Decribe </label>
-										</div>
-										<div class="col-6">
-											<textarea type="text" name="decribe" id="decribe" rows="5" class="form-control" placeholder="" aria-describedby="helpId"></textarea>
-										</div>
-									</div>
-									<div class="form-group row">
-										<div class="col-12 text-center">
-											<button type="submit" class="btn btn-lg btn-success">Register</button>
-										</div>
-									</div>
-								</form>
-								<div id="bytesID" class="col-md-12 alert h6 text-white"></div>
-							</div>
-						</div>
-					</div>
-				</div>
+  <body class="g-sidenav-show bg-gray-100">
+    <div class="min-height-300 bg-primary position-absolute w-100"></div>
+    <%- include('sidebar',{choosing:2}) -%>
+    <main class="main-content position-relative border-radius-lg">
+      <!-- Navbar -->
+      <%- include('navbar',{}) -%>
+      <!-- End Navbar -->
+      <div class="container-fluid py-4">
+        <div class="row">
+          <div class="col-12 mb-4">
+            <div class="card">
+              <div class="card-header">
+                <h3>Register Device</h3>
+              </div>
+              <div class="card-body p-3">
+                <form action="/store_register_device" method="POST" id="register-form" target="#">
+                  <div class="form-group row">
+                    <div class="col-1">
+                      <label for="deviceID" class="col-form-label">Device ID</label>
+                    </div>
+                    <div class="col-6">
+                      <input type="text" name="deviceID" id="deviceID" class="form-control" placeholder="" aria-describedby="helpId" />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-1">
+                      <label for="deviceID" class="col-form-label">Device Name</label>
+                    </div>
+                    <div class="col-6">
+                      <input type="text" name="deviceName" id="deviceName" class="form-control" placeholder="" aria-describedby="helpId" />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-1">
+                      <label for="price" class="col-form-label">Price </label>
+                    </div>
+                    <div class="col-4">
+                      <input type="number" step="any" name="price" id="price" class="form-control" placeholder="" aria-describedby="helpId" />
+                    </div>
+                    <div class="col-2">
+                      <p id="helpId" class="text-muted">ETH</p>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-1">
+                      <label for="decribe" class="col-form-label">Decribe </label>
+                    </div>
+                    <div class="col-6">
+                      <textarea
+                        type="text"
+                        name="decribe"
+                        id="decribe"
+                        rows="5"
+                        class="form-control"
+                        placeholder=""
+                        aria-describedby="helpId"
+                      ></textarea>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-12 text-center">
+                      <button type="submit" class="btn btn-lg btn-success">Register</button>
+                    </div>
+                  </div>
+                </form>
+                <div id="bytesID" class="col-md-12 alert h6 text-white"></div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-				<footer class="footer pt-3">
-					<div class="container-fluid">
-						<div class="row align-items-center justify-content-lg-between">
-							<div class="col-lg-6 mb-lg-0 mb-4">
-								<div class="copyright text-center text-sm text-muted text-lg-start">
-									©
-									<script>
-										document.write(new Date().getFullYear());
-									</script>
-									, made with <i class="fa fa-heart"></i> by
-									<a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a>
-									for a better web.
-								</div>
-							</div>
-							<div class="col-lg-6">
-								<ul class="nav nav-footer justify-content-center justify-content-lg-end">
-									<li class="nav-item">
-										<a href="https://www.creative-tim.com" class="nav-link text-muted" target="_blank">Creative Tim</a>
-									</li>
-									<li class="nav-item">
-										<a href="https://www.creative-tim.com/presentation" class="nav-link text-muted" target="_blank">About Us</a>
-									</li>
-									<li class="nav-item">
-										<a href="https://www.creative-tim.com/blog" class="nav-link text-muted" target="_blank">Blog</a>
-									</li>
-									<li class="nav-item">
-										<a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted" target="_blank">License</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</footer>
-			</div>
-		</main>
-		<div class="fixed-plugin">
-			<a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
-				<i class="fa fa-cog py-2"> </i>
-			</a>
-			<div class="card">
-				<div class="card-header pb-0 pt-3">
-					<div class="float-start">
-						<h5 class="mt-3 mb-0">Argon Configurator</h5>
-						<p>See our dashboard options.</p>
-					</div>
-					<div class="float-end mt-4">
-						<button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
-							<i class="fa fa-close"></i>
-						</button>
-					</div>
-					<!-- End Toggle Button -->
-				</div>
-				<hr class="horizontal dark my-1" />
-				<div class="card-body pt-sm-3 pt-0 overflow-auto">
-					<!-- Sidebar Backgrounds -->
-					<div>
-						<h6 class="mb-0">Sidebar Colors</h6>
-					</div>
-					<a href="javascript:void(0)" class="switch-trigger background-color">
-						<div class="badge-colors my-2 text-start">
-							<span class="badge filter bg-gradient-primary active" data-color="primary" onclick="sidebarColor(this)"></span>
-							<span class="badge filter bg-gradient-dark" data-color="dark" onclick="sidebarColor(this)"></span>
-							<span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)"></span>
-							<span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
-							<span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
-							<span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
-						</div>
-					</a>
-					<!-- Sidenav Type -->
-					<div class="mt-3">
-						<h6 class="mb-0">Sidenav Type</h6>
-						<p class="text-sm">Choose between 2 different sidenav types.</p>
-					</div>
-					<div class="d-flex">
-						<button class="btn bg-gradient-primary w-100 px-3 mb-2 active me-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
-						<button class="btn bg-gradient-primary w-100 px-3 mb-2" data-class="bg-default" onclick="sidebarType(this)">Dark</button>
-					</div>
-					<p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
-					<!-- Navbar Fixed -->
-					<div class="d-flex my-3">
-						<h6 class="mb-0">Navbar Fixed</h6>
-						<div class="form-check form-switch ps-0 ms-auto my-auto">
-							<input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)" />
-						</div>
-					</div>
-					<hr class="horizontal dark my-sm-4" />
-					<div class="mt-2 mb-5 d-flex">
-						<h6 class="mb-0">Light / Dark</h6>
-						<div class="form-check form-switch ps-0 ms-auto my-auto">
-							<input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)" />
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
-	<script src="/js/core/jquery.min.js"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-		crossorigin="anonymous"
-	></script>
-	<script
-		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-		crossorigin="anonymous"
-	></script>
-	<script src="/javascripts/rek.js"></script>
-	<!-- web3 -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.4.0/web3.min.js"></script>
-	<script src="/javascripts/metadata.js"></script>
-	<script src="/javascripts/contract_API.js"></script>
-	<script src="/javascripts/init.js"></script>
+        <footer class="footer pt-3">
+          <div class="container-fluid">
+            <div class="row align-items-center justify-content-lg-between">
+              <div class="col-lg-6 mb-lg-0 mb-4">
+                <div class="copyright text-center text-sm text-muted text-lg-start">
+                  ©
+                  <script>
+                    document.write(new Date().getFullYear());
+                  </script>
+                  , made with <i class="fa fa-heart"></i> by
+                  <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a>
+                  for a better web.
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+                  <li class="nav-item">
+                    <a href="https://www.creative-tim.com" class="nav-link text-muted" target="_blank">Creative Tim</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted" target="_blank">About Us</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="https://www.creative-tim.com/blog" class="nav-link text-muted" target="_blank">Blog</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted" target="_blank">License</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+    <div class="fixed-plugin">
+      <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+        <i class="fa fa-cog py-2"> </i>
+      </a>
+      <div class="card">
+        <div class="card-header pb-0 pt-3">
+          <div class="float-start">
+            <h5 class="mt-3 mb-0">Argon Configurator</h5>
+            <p>See our dashboard options.</p>
+          </div>
+          <div class="float-end mt-4">
+            <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
+              <i class="fa fa-close"></i>
+            </button>
+          </div>
+          <!-- End Toggle Button -->
+        </div>
+        <hr class="horizontal dark my-1" />
+        <div class="card-body pt-sm-3 pt-0 overflow-auto">
+          <!-- Sidebar Backgrounds -->
+          <div>
+            <h6 class="mb-0">Sidebar Colors</h6>
+          </div>
+          <a href="javascript:void(0)" class="switch-trigger background-color">
+            <div class="badge-colors my-2 text-start">
+              <span class="badge filter bg-gradient-primary active" data-color="primary" onclick="sidebarColor(this)"></span>
+              <span class="badge filter bg-gradient-dark" data-color="dark" onclick="sidebarColor(this)"></span>
+              <span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)"></span>
+              <span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
+              <span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
+              <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
+            </div>
+          </a>
+          <!-- Sidenav Type -->
+          <div class="mt-3">
+            <h6 class="mb-0">Sidenav Type</h6>
+            <p class="text-sm">Choose between 2 different sidenav types.</p>
+          </div>
+          <div class="d-flex">
+            <button class="btn bg-gradient-primary w-100 px-3 mb-2 active me-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
+            <button class="btn bg-gradient-primary w-100 px-3 mb-2" data-class="bg-default" onclick="sidebarType(this)">Dark</button>
+          </div>
+          <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
+          <!-- Navbar Fixed -->
+          <div class="d-flex my-3">
+            <h6 class="mb-0">Navbar Fixed</h6>
+            <div class="form-check form-switch ps-0 ms-auto my-auto">
+              <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)" />
+            </div>
+          </div>
+          <hr class="horizontal dark my-sm-4" />
+          <div class="mt-2 mb-5 d-flex">
+            <h6 class="mb-0">Light / Dark</h6>
+            <div class="form-check form-switch ps-0 ms-auto my-auto">
+              <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/js/core/jquery.min.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"
+  ></script>
+  <script src="/javascripts/rek.js"></script>
+  <!-- web3 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.4.0/web3.min.js"></script>
+  <script src="/javascripts/metadata.js"></script>
+  <script src="/javascripts/contract_API.js"></script>
+  <script src="/javascripts/init.js"></script>
 
-	<script src="/javascripts/subcribeEvent.js"></script>
-	<script>
-		$(document).ready(async function () {
-			await load();
-		});
-	</script>
+  <script src="/javascripts/subcribeEvent.js"></script>
+  <script>
+    $(document).ready(async function () {
+      await load();
+    });
+  </script>
 
-	<script>
-		document.getElementById("register-form").addEventListener("submit", function (event) {
-			event.preventDefault();
-			var form = $(this);
-			console.log(form);
-			let inputValue = $("form :input");
-			decribe = inputValue[3].value;
-			deviceID = inputValue[0].value;
-			deviceName = inputValue[1].value;
-			price = web3.utils.toWei(`${inputValue[2].value}`, "ether");
-			console.log(inputValue);
-			console.log(deviceID);
-			console.log(decribe);
-			let idInBytes = stringToBytes32(deviceID);
-			register(idInBytes, deviceName, decribe, price)
-				.on("receipt", function (receipt) {
-					$("#bytesID").removeClass("alert-danger");
-					$("#bytesID").addClass("alert-primary");
-					$("#bytesID")[0].innerHTML = "Created success device with ID: " + idInBytes;
+  <script>
+    document.getElementById("register-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      var form = $(this);
+      console.log(form);
+      let inputValue = $("form :input");
+      decribe = inputValue[3].value;
+      deviceID = inputValue[0].value;
+      deviceName = inputValue[1].value;
+      price = web3.utils.toWei(`${inputValue[2].value}`, "ether");
+      console.log(inputValue);
+      console.log(deviceID);
+      console.log(decribe);
+      let idInBytes = stringToBytes32(deviceID);
+      register(idInBytes, deviceName, decribe, price)
+        .on("receipt", function (receipt) {
+          $("#bytesID").removeClass("alert-danger");
+          $("#bytesID").addClass("alert-primary");
+          $("#bytesID")[0].innerHTML = "Created success device with ID: " + idInBytes;
 
-					var form = $("form");
-					var actionUrl = form.attr("action");
-					$.ajax({
-						type: "POST",
-						url: "/store_register_device",
-						data: form.serialize(),
-						success: (data) => {
-							console.log(data);
-						},
-						error: (err) => {
-							console.log(data);
-						},
-					});
-				})
-				.on("error", function (error, receipt) {
-					$("#bytesID").removeClass("alert-primary");
-					$("#bytesID").addClass("alert-danger");
-					$("#bytesID")[0].innerHTML = "Fail to create device";
-					console.log(error);
-				});
-		});
-	</script>
+          var form = $("form");
+          var actionUrl = form.attr("action");
+          $.ajax({
+            type: "POST",
+            url: "/DO/store_register_device",
+            data: form.serialize(),
+            success: (data) => {
+              console.log(data);
+            },
+            error: (err) => {
+              console.log(data);
+            },
+          });
+        })
+        .on("error", function (error, receipt) {
+          $("#bytesID").removeClass("alert-primary");
+          $("#bytesID").addClass("alert-danger");
+          $("#bytesID")[0].innerHTML = "Fail to create device";
+          console.log(error);
+        });
+    });
+  </script>
 </html>
