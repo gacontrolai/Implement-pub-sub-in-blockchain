@@ -1,7 +1,8 @@
 var contractJson = require("./build/contracts/PubSub.json");
 
 var Web3 = require("web3");
-const web3Provider = require("web3-providers-http");
+
+const { create } = require("ipfs-http-client");
 
 var mysql = require("mysql");
 
@@ -24,6 +25,14 @@ function listenNewData() {
   contractInstance.events.NewData({ fromBlock: "latest" }).on("data", (event) => {
     var storeDevice = "";
   });
+}
+
+function listenPublish() {
+	contractInstance.events.Publish({ fromBlock: "latest" }).on("data", (event) => {});
+}
+
+function getIpfs(params) {
+	ip;
 }
 
 function listenSubscribe() {

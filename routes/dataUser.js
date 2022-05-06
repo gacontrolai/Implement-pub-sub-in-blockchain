@@ -23,4 +23,21 @@ router.get("/device_data", checkDataUser, (req, res) => {
   res.render("du/device_data.ejs", { deviceID: req.query.deviceID });
 });
 
+async function listenPublish(cid) {
+	contractInstance.events.Publish({ fromBlock: "latest" }).on("data", (event) => {});
+}
+
+async function getIpfs(CID) {
+	for await (const buf of ipfs.cat(CID)) {
+		console.log(buf.toString());
+		return buf.toString();
+	}
+}
+
+router.post("/getIpfs", async (req, res) => {
+	let result = await getIpfs(req.body.cid);
+	console.log(result);
+	res.send(result);
+});
+
 module.exports = router;
