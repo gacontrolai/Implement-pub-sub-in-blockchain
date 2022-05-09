@@ -23,7 +23,7 @@
 
 	<body class="g-sidenav-show bg-gray-100">
 		<div class="min-height-300 bg-primary position-absolute w-100"></div>
-		<%- include('sidebar',{"choosing":1}) -%>
+		<%- include('sidebar',{"choosing":3}) -%>
 		<main class="main-content position-relative border-radius-lg">
 			<!-- Navbar -->
 			<%- include('navbar',{}) -%>
@@ -69,7 +69,7 @@
 													<table class="table table-bordered table-hover" id="displaySubscriber" width="100%" cellspacing="0">
 														<thead>
 															<tr>
-																<th class="th-sm">Address</th>
+																<th class="th-sm">Data ID</th>
 																<th class="th-sm">From</th>
 																<th class="th-sm">To</th>
 																<th class="th-sm">Data IPFS</th>
@@ -338,7 +338,7 @@
 					success: (res) => {
 						subscribeTable.clear().draw();
 						res.forEach((element) => {
-							linkToData = `<a href= "/DU/view_data?dataID=${element.data_id}"> ${element.data_id} </a>`;
+							linkToData = `<a href= "/DU/view_data?dataID=${element.data_id}"> ${stringToBytes32(element.data_id)} </a>`;
 							viewIPFS = `<a href= "http://localhost:8080/ipfs/${element.data_uri}" target=#> View in IPFS </a>`;
 							subscribeTable.row.add([linkToData, new Date(element.start_day).toDateString(), new Date(element.end_day).toDateString(), viewIPFS]).draw();
 						});
