@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png" />
+		<link rel="icon" type="image/png" href="/assets/img/favicon.png" />
+		<title>All Devices</title>
+		<!--     Fonts and icons     -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+		<!-- Nucleo Icons -->
+		<link href="/assets/css/nucleo-icons.css" rel="stylesheet" />
+		<link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
+		<!-- Font Awesome Icons -->
+		<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+		<link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
+		<!-- CSS Files -->
+		<link id="pagestyle" href="/assets/css/argon-dashboard.css?v=2.0.2" rel="stylesheet" />
+		<link href="/assets/css/loader.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="/assets/css/datatables.css" />
+		<link rel="stylesheet" type="text/css" href="/assets/css/select.bootstrap5.css" />
+	</head>
+
+	<body class="g-sidenav-show bg-gray-100">
+		<div class="min-height-300 bg-primary position-absolute w-100"></div>
+		<%- include('sidebar',{"choosing":1}) -%>
+		<main class="main-content position-relative border-radius-lg">
+			<!-- Navbar -->
+			<%- include('navbar',{}) -%>
+			<!-- End Navbar -->
+			<div class="container-fluid py-4">
+				<div class="row justify-content-center">
+					<div class="col-6">
+						<div class="card">
+							<div class="card-header pb-1">
+								<h3>Device detail</h3>
+							</div>
+							<div class="card-body p-3">
+								<h5>
+									<b>OWNER: <span id="owner"></span></b>
+								</h5>
+								<p class="text-sm mb-0 text-uppercase font-weight-bold">Id:</p>
+								<p class="card-text">
+									<small class="text-muted" id="deviceID">0x0000000002134</small>
+								</p>
+								<p class="text-sm mb-0 text-uppercase font-weight-bold">Decribe:</p>
+								<p class="card-text" id="describe">Sensor for temperature</p>
+								<p class="text-sm mb-0 text-uppercase font-weight-bold">Price:</p>
+								<div class="numbers">
+									<h5 class="font-weight-bolder"><span id="price"></span> ETH</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row mt-3">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-header pb-1 text-center">
+									<h3>Publish</h3>
+								</div>
+								<div class="card-body p-3">
+									<div class="row">
+										<div class="col-12" style="height: 100%">
+											<div class="card card-body border card-plain border-radius-lg">
+												<div class="card-header px-0 pb-0">
+													<h4>List of received data</h4>
+												</div>
+												<div class="table-responsive">
+													<table class="table table-bordered table-hover" id="displaySubscriber" width="100%" cellspacing="0">
+														<thead>
+															<tr>
+																<th class="th-sm">Address</th>
+																<th class="th-sm">From</th>
+																<th class="th-sm">To</th>
+																<th class="th-sm">Data IPFS</th>
+															</tr>
+														</thead>
+														<tbody></tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div id="displayMess" class="mt-2 alert text-white h6"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="listDevice" class="row mt-4">
+						<!-- <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+						<div class="card">
+							<div class="card-header">
+								<h4>Day la device</h4>
+							</div>
+							<div class="card-body p-3">
+								<div class="row">
+									<div class="col-8">
+										<div class="numbers">
+											<p class="text-sm mb-0 text-uppercase font-weight-bold">Id:</p>
+											<h5 class="font-weight-bolder">0x0000000002134</h5>
+											<p class="text-sm mb-0 text-uppercase font-weight-bold">Decribe:</p>
+											<p class="card-text">Sensor for temperature</p>
+											<p class="text-sm mb-0 text-uppercase font-weight-bold">Price:</p>
+											<h5 class="font-weight-bolder">1 USD</h5>
+										</div>
+									</div>
+									<div class="col-4 text-end">
+										<div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+											<i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					</div>
+
+					<footer class="footer pt-3">
+						<div class="container-fluid">
+							<div class="row align-items-center justify-content-lg-between">
+								<div class="col-lg-6 mb-lg-0 mb-4">
+									<div class="copyright text-center text-sm text-muted text-lg-start">
+										©
+										<script>
+											document.write(new Date().getFullYear());
+										</script>
+										, made with <i class="fa fa-heart"></i> by
+										<a href="#" class="font-weight-bold" target="_blank">BKU</a>
+										for a better blockchain.
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<ul class="nav nav-footer justify-content-center justify-content-lg-end">
+										<li class="nav-item">
+											<a href="#" class="nav-link text-muted" target="_blank">BKU</a>
+										</li>
+										<li class="nav-item">
+											<a href="#" class="nav-link text-muted" target="_blank">About Us</a>
+										</li>
+										<li class="nav-item">
+											<a href="#" class="nav-link text-muted" target="_blank">Blog</a>
+										</li>
+										<li class="nav-item">
+											<a href="#" class="nav-link pe-0 text-muted" target="_blank">License</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</footer>
+				</div>
+			</div>
+		</main>
+		<div class="fixed-plugin">
+			<a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+				<i class="fa fa-cog py-2"> </i>
+			</a>
+			<div class="card">
+				<div class="card-header pb-0 pt-3">
+					<div class="float-start">
+						<h5 class="mt-3 mb-0">Argon Configurator</h5>
+						<p>See our dashboard options.</p>
+					</div>
+					<div class="float-end mt-4">
+						<button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
+							<i class="fa fa-close"></i>
+						</button>
+					</div>
+					<!-- End Toggle Button -->
+				</div>
+				<hr class="horizontal dark my-1" />
+				<div class="card-body pt-sm-3 pt-0 overflow-auto">
+					<!-- Sidebar Backgrounds -->
+					<div>
+						<h6 class="mb-0">Sidebar Colors</h6>
+					</div>
+					<a href="javascript:void(0)" class="switch-trigger background-color">
+						<div class="badge-colors my-2 text-start">
+							<span class="badge filter bg-gradient-primary active" data-color="primary" onclick="sidebarColor(this)"></span>
+							<span class="badge filter bg-gradient-dark" data-color="dark" onclick="sidebarColor(this)"></span>
+							<span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)"></span>
+							<span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
+							<span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
+							<span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
+						</div>
+					</a>
+					<!-- Sidenav Type -->
+					<div class="mt-3">
+						<h6 class="mb-0">Sidenav Type</h6>
+						<p class="text-sm">Choose between 2 different sidenav types.</p>
+					</div>
+					<div class="d-flex">
+						<button class="btn bg-gradient-primary w-100 px-3 mb-2 active me-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
+						<button class="btn bg-gradient-primary w-100 px-3 mb-2" data-class="bg-default" onclick="sidebarType(this)">Dark</button>
+					</div>
+					<p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
+					<!-- Navbar Fixed -->
+					<div class="d-flex my-3">
+						<h6 class="mb-0">Navbar Fixed</h6>
+						<div class="form-check form-switch ps-0 ms-auto my-auto">
+							<input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)" />
+						</div>
+					</div>
+					<hr class="horizontal dark my-sm-4" />
+					<div class="mt-2 mb-5 d-flex">
+						<h6 class="mb-0">Light / Dark</h6>
+						<div class="form-check form-switch ps-0 ms-auto my-auto">
+							<input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="loader-wrapper">
+			<div class="contain-loader">
+				<span class="loader"><span class="loader-inner"></span></span>
+				<div class="text-wrapper">
+					<p class="loader-text">Loading ....</p>
+				</div>
+			</div>
+		</div>
+		<!--   Core JS Files   -->
+		<script src="/js/core/jquery.min.js"></script>
+		<script src="/assets/js/plugins/js.cookie.min.js"></script>
+		<script src="/assets/js/core/popper.min.js"></script>
+		<script src="/assets/js/core/bootstrap.min.js"></script>
+		<script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
+		<script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
+		<script type="text/javascript" src="/assets/js/plugins/datatables.min.js"></script>
+		<script type="text/javascript" src="/assets/js/plugins/dataTables.select.min.js"></script>
+
+		<script>
+			var win = navigator.platform.indexOf("Win") > -1;
+			if (win && document.querySelector("#sidenav-scrollbar")) {
+				var options = {
+					damping: "0.5",
+				};
+				Scrollbar.init(document.querySelector("#sidenav-scrollbar"), options);
+			}
+		</script>
+		<!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+		<script src="/assets/js/argon-dashboard.min.js?v=2.0.2"></script>
+		<!-- re-encrypt key js	 -->
+		<script src="/javascripts/rek.js"></script>
+		<!-- web3 -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.4.0/web3.min.js"></script>
+		<script src="/javascripts/metadata.js"></script>
+		<script src="/javascripts/contract_API.js"></script>
+		<script src="/javascripts/init.js"></script>
+
+		<script src="/javascripts/subcribeEvent.js"></script>
+		<!-- ajax code for page -->
+		<script>
+			var dataPrice;
+			var subscribeTable = $("#displaySubscriber").DataTable({
+				// columnDefs: [
+				// 	{
+				// 		orderable: false,
+				// 		className: "select-checkbox",
+				// 		targets: 0,
+				// 	},
+				// ],
+				// select: {
+				// 	style: "multi ",
+				// 	selector: "td:first-child",
+				// },
+				// order: [[1, "asc"]],
+			});
+			var dataOwner;
+			var colorList = [
+				"bg-gradient-primary shadow-primary",
+				"bg-gradient-info shadow-info",
+				"bg-gradient-danger shadow-danger",
+				"bg-gradient-success shadow-success",
+				"bg-gradient-warning shadow-warning",
+			];
+			function newData(event) {
+				console.log(event);
+				var ran = Math.floor(Math.random() * 5);
+				console.log(ran);
+				var fromTime = new Date(parseInt(event.returnValues._from));
+				var toTime = new Date(parseInt(event.returnValues._to));
+				console.log(toTime);
+				str = `
+								<div class="col-xl-4 col-sm-6 mb-xl-0 mb-4 mt-4">
+									<div class="card">
+									<div class="card-header pb-1">
+										<h5><b>Data ID:</b> ${event.returnValues.dataID}</h5>
+									</div>
+									<div class="card-body">
+										<div class="row">
+											<div class="col-8">
+											<div class="numbers">
+												<p class="text-sm mb-0 text-uppercase font-weight-bold">From:</p>
+												<p class="card-text"> ${fromTime.toDateString()}</p>
+													<p class="text-sm mb-0 text-uppercase font-weight-bold">To:</p>
+												<p class="card-text"> ${toTime.toDateString()}</p>
+												<p class="text-sm mb-0 text-uppercase font-weight-bold">Data Uri:</p>
+												<h5 class="font-weight-bolder"><a target="#" href="http://localhost:8080//ipfs/${event.returnValues._dataUri}">${event.returnValues._dataUri}</a></h5>
+												<p class="text-sm mb-0 text-uppercase font-weight-bold">Re-encryption key Uri:</p>
+												<h5 class="font-weight-bolder"><a target="#" href="http://localhost:8080//ipfs/${event.returnValues._keyUri}">${event.returnValues._keyUri}</a></h5>
+
+											</div>
+											</div>
+											<div class="col-4 text-end">
+											<div class="icon icon-shape ${colorList[ran]} text-center rounded-circle">
+												<i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+											</div>
+											</div>
+										</div>
+									</div>
+									</div>
+								</div>`;
+				$("#listDevice").append(str);
+			}
+
+			function deviceInfo(event) {
+				dataPrice = event.returnValues.price;
+				dataOwner = event.returnValues.owner;
+				$("#owner").text(dataOwner);
+				$("#deviceID").text(event.returnValues.id);
+				$("#describe").text(event.returnValues._decribe);
+				$("#price").text(web3.utils.fromWei(event.returnValues.price, "ether"));
+				$(".loader-wrapper").fadeOut("slow");
+			}
+
+			$(document).ready(async function () {
+				await load();
+
+				subPub("<%- deviceID %>", newData);
+				getDeviceDetail("<%- deviceID %>", deviceInfo);
+				$.ajax({
+					url: "/DU/received_data",
+					method: "GET",
+					data: {
+						deviceID: web3.utils.hexToUtf8("<%- deviceID %>"),
+					},
+					success: (res) => {
+						subscribeTable.clear().draw();
+						res.forEach((element) => {
+							linkToData = `<a href= "/DU/view_data?dataID=${element.data_id}"> ${element.data_id} </a>`;
+							viewIPFS = `<a href= "http://localhost:8080/ipfs/${element.data_uri}" target=#> View in IPFS </a>`;
+							subscribeTable.row.add([linkToData, new Date(element.start_day).toDateString(), new Date(element.end_day).toDateString(), viewIPFS]).draw();
+						});
+					},
+				});
+			});
+		</script>
+	</body>
+</html>
