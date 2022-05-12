@@ -26,7 +26,7 @@
 		<%- include('sidebar',{"choosing":3}) -%>
 		<main class="main-content position-relative border-radius-lg">
 			<!-- Navbar -->
-			<%- include('navbar',{}) -%>
+			<%- include('navbar',{pageName: "Received data"}) -%>
 			<!-- End Navbar -->
 			<div class="container-fluid py-4">
 				<div class="row justify-content-center">
@@ -43,6 +43,8 @@
 								<p class="card-text">
 									<small class="text-muted" id="deviceID">0x0000000002134</small>
 								</p>
+								<p class="text-sm mb-0 text-uppercase font-weight-bold">Device Name:</p>
+								<h5 id="deviceName" class="font-weight-bolder"></h5>
 								<p class="text-sm mb-0 text-uppercase font-weight-bold">Decribe:</p>
 								<p class="card-text" id="describe">Sensor for temperature</p>
 								<p class="text-sm mb-0 text-uppercase font-weight-bold">Price:</p>
@@ -319,6 +321,7 @@
 				dataOwner = event.returnValues.owner;
 				$("#owner").text(dataOwner);
 				$("#deviceID").text(event.returnValues.id);
+				$("#deviceName").text(event.returnValues.deviceName);
 				$("#describe").text(event.returnValues._decribe);
 				$("#price").text(web3.utils.fromWei(event.returnValues.price, "ether"));
 				$(".loader-wrapper").fadeOut("slow");

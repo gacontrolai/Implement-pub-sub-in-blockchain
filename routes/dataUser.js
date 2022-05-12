@@ -4,8 +4,6 @@ var reencypt = require("../keyGen.js");
 var multer = require("multer");
 const fs = require("fs");
 const PRE = require("recrypt-js");
-const PRE2 = require("bm-pre-x");
-const { stringify } = require("querystring");
 const { create } = require("ipfs-http-client");
 const bcrypt = require("bcrypt");
 const { AES, enc } = require("crypto-js");
@@ -84,19 +82,20 @@ router.get("/recevice_device", (req, res) => {
 	res.render("DU/receive_device", {});
 });
 
-router.get("/decrypt_packet", (req, res) => {
+router.post("/decrypt_packet", (req, res) => {
 	var getPacket = `select * from data_packet where data_id = ?;`;
+	console.log("Entering query");
 	con.query(getPacket, req.body.dataID, async (err, result) => {
 		if (err) {
-			const error = new Error(err);
-			error.httpStatusCode = 400;
-			return next(error);
+			return res.status(400).send(err);
 		}
 		if (result.length == 0) {
-			const error = new Error("Can't find device");
-			error.httpStatusCode = 400;
-			return next(error);
+			return res.status(400).send("Can't find devices");
 		}
+		if (!bcrypt.compareSync(req.body.password, req.session.password)) {
+			return res.status(401).send("Wrong password");
+		}
+		console.log("getting ipfs");
 		var data = JSON.parse(await getIpfs(result[0].data_uri));
 		console.log("sk and pass: ", { sk: req.session.sk, pass: req.body.password });
 		var dataUserSK = AES.decrypt(req.session.sk, req.body.password).toString(enc.Utf8);
@@ -114,52 +113,49 @@ router.get("/decrypt_packet", (req, res) => {
 	// res.send(test("aaaa"));
 });
 
-function test(inputStr) {
-	var kp_A = PRE.Proxy.generate_key_pair();
-	var sk_A = PRE.Proxy.to_hex(kp_A.get_private_key().to_bytes());
-	var pk_A = PRE.Proxy.to_hex(kp_A.get_public_key().to_bytes());
+router.get("/list_subscribe", (req, res) => {
+	res.render("du/view_subscription", { dataID: req.query.dataID });
+});
 
-	var kp_B = PRE.Proxy.generate_key_pair();
-	var sk_B = PRE.Proxy.to_hex(kp_B.get_private_key().to_bytes());
-	var pk_B = PRE.Proxy.to_hex(kp_B.get_public_key().to_bytes());
-
-	console.log("SK: " + sk_B);
-	console.log("PK:" + pk_B);
-
-	let obj = PRE.encryptData(pk_A, inputStr);
-	console.log(obj);
-	let rk = PRE.generateReEncrytionKey(sk_A, pk_B);
-	console.log("ReK:" + rk);
-	PRE.reEncryption(rk, obj);
-	console.log(obj);
-
-	let decryptData = PRE.decryptData(sk_B, obj);
-	console.log(decryptData);
-}
-
-function test2(inputStr) {
-	PRE2.init({ g: "this is g", h: "that is h", returnHex: true }).then((params) => {
-		console.log(params);
-		const A = PRE2.keyGenInG1(params, { returnHex: true });
-		const B = PRE2.keyGenInG2(params, { returnHex: true });
-		console.log("key A:", A);
-		const plain = PRE2.randomGen();
-		const encrypted = PRE2.enc(plain, A.pk, params, { returnHex: true });
-		console.log("encrypted: ", encrypted);
-		const decrypted = PRE2.dec(encrypted, A.sk, params);
-		console.log(plain === decrypted);
-		const reKey = PRE2.rekeyGen(A.sk, B.pk, { returnHex: true });
-		console.log("rek: ", reKey);
-		const reEncypted = PRE2.reEnc(encrypted, reKey, { returnHex: true });
-		console.log("re-encrypted: ", reEncypted);
-		const reDecrypted = PRE2.reDec(reEncypted, B.sk);
-		console.log(plain === reDecrypted);
-		return reDecrypted;
+router.post("/get_subscription", (req, res) => {
+	queryForSub = `select device_id_fk, start_day, end_day, trans_id from register where du_id_fk = ? `;
+	con.query(queryForSub, [req.session.userID], (err, result) => {
+		if (err) {
+			return res.status(400).send(err);
+		}
+		if (result.length == 0) {
+			return res.status(400).send("Can't find any subscription");
+		}
+		res.status(200).send(result);
 	});
-}
+});
 
 router.get("/view_data", (req, res) => {
 	res.render("du/view_data", { dataID: req.query.dataID });
+});
+
+router.get("/view_confirm_received_data", (req, res) => {
+	res.render("du/view_confirm_data", { trans: req.query.trans_id });
+});
+
+router.post("/confirm_received_data", (req, res) => {
+	var query = `select device_id_fk, data_id_fk, data_packet.start_day, data_packet.end_day, confirm from (receive join data_packet on data_id_fk = data_id) join register on device_id_fk= receive.device_id_mk where trans_id = ? and du_id_fk = ? and data_packet.start_day >= register.start_day  and data_packet.end_day <= register.end_day  ;`;
+	con.query(query, [req.body.trans_id, req.session.userID], (err, result) => {
+		if (err) {
+			res.send(err);
+		}
+		console.log(query);
+		res.send(result);
+	});
+});
+
+router.post("/store_confirmed_data", (req, res) => {
+	con.query(`UPDATE receive SET confirm = 1 where data_id_fk in (?)`, [req.body.dataID], (err, result) => {
+		if (err) {
+			return res.send(err);
+		}
+		res.send("success");
+	});
 });
 
 router.post("/getIpfs", async (req, res) => {

@@ -24,7 +24,7 @@
 		<%- include('sidebar',{"choosing":1}) -%>
 		<main class="main-content position-relative border-radius-lg">
 			<!-- Navbar -->
-			<%- include('navbar',{}) -%>
+			<%- include('navbar',{pageName:"Subscribe"}) -%>
 			<!-- End Navbar -->
 			<div class="container-fluid py-4">
 				<div class="row">
@@ -45,8 +45,10 @@
 											</h5>
 											<p class="text-sm mb-0 text-uppercase font-weight-bold">Id:</p>
 											<p class="card-text">
-												<small class="text-muted" id="deviceID">0x0000000002134</small>
+												<small class="text-muted" id="deviceID"></small>
 											</p>
+											<p class="text-sm mb-0 text-uppercase font-weight-bold">Device Name:</p>
+											<h5 id="deviceName" class="font-weight-bolder"></h5>
 											<p class="text-sm mb-0 text-uppercase font-weight-bold">Decribe:</p>
 											<p class="card-text" id="describe">Sensor for temperature</p>
 											<p class="text-sm mb-0 text-uppercase font-weight-bold">Price:</p>
@@ -259,39 +261,42 @@
 			];
 
 			function newData(event) {
-			  console.log(event);
-			  var ran = Math.floor(Math.random() * 5);
-			  console.log(ran);
-			  str = `<div class="col-xl-4 col-sm-6 mb-xl-0 mb-4 mt-4">
-			    <div class="card">
-			      <div class="card-header pb-1">
-			        <h5><b>Data ID:</b> ${event.returnValues.dataID}</h5>
-			      </div>
-			      <div class="card-body">
-			        <div class="row">
-			          <div class="col-8">
-			            <div class="numbers">
+			  	console.log(event);
+			  	var ran = Math.floor(Math.random() * 5);
+			  	var fromTime = new Date(parseInt(event.returnValues._from));
+				var toTime = new Date(parseInt(event.returnValues._to));
+			  	console.log(ran);
+				str = `
+								<div class="col-xl-4 col-sm-6 mb-xl-0 mb-4 mt-4">
+									<div class="card">
+									<div class="card-header pb-1">
+										<h5><b>Data ID:</b> ${event.returnValues.dataID}</h5>
+									</div>
+									<div class="card-body">
+										<div class="row">
+											<div class="col-8">
+											<div class="numbers">
+												<p class="text-sm mb-0 text-uppercase font-weight-bold">From:</p>
+												<p class="card-text"> ${fromTime.toDateString()}</p>
+													<p class="text-sm mb-0 text-uppercase font-weight-bold">To:</p>
+												<p class="card-text"> ${toTime.toDateString()}</p>
+												<p class="text-sm mb-0 text-uppercase font-weight-bold">Data Uri:</p>
+												<h5 class="font-weight-bolder"><a target="#" href="http://localhost:8080/ipfs/${event.returnValues._dataUri}">${event.returnValues._dataUri}</a></h5>
+												<p class="text-sm mb-0 text-uppercase font-weight-bold">Re-encryption key Uri:</p>
+												<h5 class="font-weight-bolder"><a target="#" href="http://localhost:8080/ipfs/${event.returnValues._keyUri}">${event.returnValues._keyUri}</a></h5>
 
-			              <p class="text-sm mb-0 text-uppercase font-weight-bold">Key ID:</p>
-			              <h5 class="font-weight-bolder">${web3.utils.toAscii(event.returnValues.keyID)}</h5>
-			              <p class="text-sm mb-0 text-uppercase font-weight-bold">From:</p>
-			              <p class="card-text"> ${event.returnValues._from}</p>
-			                 <p class="text-sm mb-0 text-uppercase font-weight-bold">To:</p>
-			              <p class="card-text"> ${event.returnValues._to}</p>
-			              <p class="text-sm mb-0 text-uppercase font-weight-bold">Data Uri:</p>
-			              <h5 class="font-weight-bolder"><a target="#" href="http://localhost:8080//ipfs/${event.returnValues._uri}">${event.returnValues._uri}</a></h5>
-			            </div>
-			          </div>
-			          <div class="col-4 text-end">
-			            <div class="icon icon-shape ${colorList[ran]} text-center rounded-circle">
-			              <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
-			            </div>
-			          </div>
-			        </div>
-			      </div>
-			    </div>
-			  </div>`;
-			  $("#listDevice").append(str);
+											</div>
+											</div>
+											<div class="col-4 text-end">
+											<div class="icon icon-shape ${colorList[ran]} text-center rounded-circle">
+												<i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+											</div>
+											</div>
+										</div>
+									</div>
+									</div>
+								</div>`;
+				$("#listDevice").append(str);
 
 			}
 
@@ -299,6 +304,7 @@
 			  dataPrice = event.returnValues.price
 			  dataOwner = event.returnValues.owner
 			  $("#owner").text(dataOwner);
+			  $("#deviceName").text(event.returnValues.deviceName);
 			  $("#deviceID").text(event.returnValues.id);
 			  $("#describe").text(event.returnValues._decribe);
 			  $("#price").text(web3.utils.fromWei(event.returnValues.price, 'ether'));

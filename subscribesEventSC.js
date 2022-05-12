@@ -6,7 +6,7 @@ const { create } = require("ipfs-http-client");
 
 var mysql = require("mysql");
 
-const contractAddress = /* contractJson.networks[5777].address */ "0xBD099BbA224e34fb7273BB267B4A52Ed04c8B950";
+const contractAddress = contractJson.networks[1337].address;
 const contractAbi = contractJson.abi;
 
 var web3 = new Web3(new Web3.providers.WebsocketProvider("ws://localhost:7545"));
@@ -51,9 +51,9 @@ function listenPublish() {
 			var dataID = bytes32ToString(event.returnValues.dataID);
 			result.forEach((account) => {
 				userKey = key.find((e) => e.address == account.bc_address);
-				arrOfRekToInsert.push([account.account_ID, dataID, userKey.rek]);
+				arrOfRekToInsert.push([account.account_ID, dataID, bytes32ToString(event.returnValues.deviceID), userKey.rek]);
 			});
-			con.query(`Insert into receive (dataUser_id_fk, data_id_fk, re_key) values ?`, [arrOfRekToInsert], (err, success) => {
+			con.query(`Insert into receive (dataUser_id_fk, data_id_fk, device_id_mk, re_key) values ?`, [arrOfRekToInsert], (err, success) => {
 				if (err) {
 					console.log(err);
 				}

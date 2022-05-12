@@ -23,57 +23,45 @@
 
 	<body class="g-sidenav-show bg-gray-100">
 		<div class="min-height-300 bg-primary position-absolute w-100"></div>
-		<%- include('sidebar',{"choosing":3}) -%>
+		<%- include('sidebar',{"choosing":4}) -%>
 		<main class="main-content position-relative border-radius-lg">
 			<!-- Navbar -->
-			<%- include('navbar',{pageName: "View data"}) -%>
+			<%- include('navbar',{pageName: "Confirm data"}) -%>
 			<!-- End Navbar -->
 			<div class="container-fluid py-4">
 				<div class="row justify-content-center">
-					<div class="col-6">
-						<div class="card">
-							<div class="card-header pb-1">
-								<h3>Data detail</h3>
-							</div>
-							<div class="card-body p-3">
-								<h5>
-									<b>Data ID: <span id="dataID"></span></b>
-								</h5>
-								<p class="text-sm mb-0 text-uppercase font-weight-bold">From:</p>
-								<p class="text-bold font-weight-bolder" id="from"></p>
-								<p class="text-sm mb-0 text-uppercase font-weight-bold">To:</p>
-								<p class="card-text font-weight-bolder" id="to"></p>
-								<p class="text-sm mb-0 text-uppercase font-weight-bold">Data Uri:</p>
-								<h5 class="font-weight-bolder"><a target="#" id="dataUri"></a></h5>
-							</div>
-						</div>
-					</div>
 					<div class="row mt-3">
 						<div class="col-12">
 							<div class="card">
 								<div class="card-header pb-1 text-center">
-									<h3>Decrypt</h3>
+									<h3>Publish</h3>
 								</div>
 								<div class="card-body p-3">
 									<div class="row">
 										<div class="col-12" style="height: 100%">
 											<div class="card card-body border card-plain border-radius-lg">
 												<div class="card-header px-0 pb-0">
-													<h4>Decrypt Data</h4>
-													<div class="form-group">
-														<label class="h6" for="password">Password</label>
-														<input type="password" name="password" id="password" class="form-control" placeholder="" aria-describedby="helpId" />
-													</div>
-													<button class="btn btn-primary" id="decrypt">Decrypt Data</button>
-													<div id="displayMess" class="mt-2 alert text-white h6"></div>
+													<h4>List of received data</h4>
 												</div>
-												<div style="height: 500px; width: 100%; overflow-y: scroll; white-space: pre-wrap" class="bg-gray-200 p-3">
-													<div class="container" id="showData">Display raw Data</div>
+												<div class="table-responsive">
+													<table class="table table-bordered table-hover" id="displaySubscriber" width="100%" cellspacing="0">
+														<thead>
+															<tr>
+																<th class="th-sm">Dta ID</th>
+																<th class="th-sm">From</th>
+																<th class="th-sm">To</th>
+																<th class="th-sm">Status</th>
+															</tr>
+														</thead>
+														<tbody></tbody>
+													</table>
+													<h5>Estimate Price: <span id="price"></span> ETH</h5>
+													<button class="btn btn-primary" id="confirm">Confirm Packet</button>
 												</div>
-												<button class="btn btn-primary">Download</button>
 											</div>
 										</div>
 									</div>
+									<div id="displayMess" class="mt-2 alert text-white h6"></div>
 								</div>
 							</div>
 						</div>
@@ -241,10 +229,26 @@
 		<script src="/javascripts/init.js"></script>
 
 		<script src="/javascripts/subcribeEvent.js"></script>
+		<script
+			type="text/javascript"
+			src="https://cdn.datatables.net/v/dt/dt-1.11.5/af-2.3.7/b-2.2.2/b-colvis-2.2.2/cr-1.5.5/date-1.1.2/fc-4.0.2/fh-3.2.2/kt-2.6.4/r-2.2.9/rg-1.1.4/rr-1.2.8/sc-2.0.5/sb-1.3.2/sp-2.0.0/sl-1.3.4/sr-1.1.0/datatables.min.js"
+		></script>
+
 		<!-- ajax code for page -->
 		<script>
-			var dataPrice;
-
+			var deviceID;
+			var subscribeTable = $("#displaySubscriber").DataTable({
+				columnDefs: [
+					{
+						orderable: false,
+						targets: 0,
+					},
+				],
+				select: {
+					style: "multi ",
+				},
+				order: [[1, "asc"]],
+			});
 			var dataOwner;
 			var colorList = [
 				"bg-gradient-primary shadow-primary",
@@ -253,52 +257,108 @@
 				"bg-gradient-success shadow-success",
 				"bg-gradient-warning shadow-warning",
 			];
-
-			$("#decrypt").click((event) => {
-				if ($("#password").val() == "") {
-					$("#displayMess").addClass("alert-danger");
-					$("#displayMess").removeClass("alert-primary");
-					$("#displayMess").text(`Please input password to decrypt the data`);
-				}
-				$.ajax({
-					url: "/DU/decrypt_packet",
-					method: "post",
-					data: {
-						dataID: "<%- dataID %>",
-						password: $("#password").val(),
-					},
-					success: (res) => {
-						$("#showData").text(res);
-						$("#displayMess").addClass("alert-primary");
-						$("#displayMess").removeClass("alert-danger");
-						$("#displayMess").text(`Decrypt success`);
-						console.log(res);
-					},
-					error: (err) => {
-						$("#displayMess").addClass("alert-danger");
-						$("#displayMess").removeClass("alert-primary");
-						$("#displayMess").text(`Having error: ${err}`);
-					},
-				});
-			});
-			$("#download").click((event) => {});
-
-			function dataInfo(events) {
-				let event = events[0];
+			function newData(event) {
+				console.log(event);
+				var ran = Math.floor(Math.random() * 5);
+				console.log(ran);
 				var fromTime = new Date(parseInt(event.returnValues._from));
 				var toTime = new Date(parseInt(event.returnValues._to));
-				$("#dataID").text(event.returnValues.dataID);
-				$("#to").text(toTime.toDateString());
-				$("#from").text(fromTime.toDateString());
-				$("#dataUri").attr("href", "http://localhost:8080/ipfs/" + event.returnValues._dataUri);
-				$("#dataUri").text(event.returnValues._dataUri);
+				console.log(toTime);
+				str = `
+								<div class="col-xl-4 col-sm-6 mb-xl-0 mb-4 mt-4">
+									<div class="card">
+									<div class="card-header pb-1">
+										<h5><b>Data ID:</b> ${event.returnValues.dataID}</h5>
+									</div>
+									<div class="card-body">
+										<div class="row">
+											<div class="col-8">
+											<div class="numbers">
+												<p class="text-sm mb-0 text-uppercase font-weight-bold">From:</p>
+												<p class="card-text"> ${fromTime.toDateString()}</p>
+													<p class="text-sm mb-0 text-uppercase font-weight-bold">To:</p>
+												<p class="card-text"> ${toTime.toDateString()}</p>
+												<p class="text-sm mb-0 text-uppercase font-weight-bold">Data Uri:</p>
+												<h5 class="font-weight-bolder"><a target="#" href="http://localhost:8080//ipfs/${event.returnValues._dataUri}">${event.returnValues._dataUri}</a></h5>
+												<p class="text-sm mb-0 text-uppercase font-weight-bold">Re-encryption key Uri:</p>
+												<h5 class="font-weight-bolder"><a target="#" href="http://localhost:8080//ipfs/${event.returnValues._keyUri}">${event.returnValues._keyUri}</a></h5>
+
+											</div>
+											</div>
+											<div class="col-4 text-end">
+											<div class="icon icon-shape ${colorList[ran]} text-center rounded-circle">
+												<i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+											</div>
+											</div>
+										</div>
+									</div>
+									</div>
+								</div>`;
+				$("#listDevice").append(str);
+			}
+
+			function deviceInfo(event) {
+				dataPrice = event.returnValues.price;
+				dataOwner = event.returnValues.owner;
+				$("#owner").text(dataOwner);
+				$("#deviceID").text(event.returnValues.id);
+				$("#describe").text(event.returnValues._decribe);
+				$("#price").text(web3.utils.fromWei(event.returnValues.price, "ether"));
 				$(".loader-wrapper").fadeOut("slow");
 			}
 
+			$("#confirm").click(async (event) => {
+				let arrOfDataID = subscribeTable.rows({ selected: true }).data().pluck(0).toArray();
+				var price = await method.calPackagePrice(stringToBytes32(deviceID), arrOfDataID).call({ from: account });
+				method
+					.confirm(stringToBytes32(deviceID), arrOfDataID, "<%- trans -%>")
+					.send({ from: account })
+					.on("receipt", (receipt) => {
+						console.log(receipt);
+					});
+				console.log(arrOfDataID);
+			});
+
+			subscribeTable.on("select", async function (e, dt, type, indexes) {
+				if (type === "row") {
+					var data = subscribeTable.rows({ selected: true }).data().pluck(0);
+					var price = await method.calPackagePrice(stringToBytes32(deviceID), data.toArray()).call({ from: account });
+					$("#price").text(web3.utils.fromWei(price));
+
+					// do something with the ID of the selected items
+				}
+			});
+
+			subscribeTable.on("deselect", async function (e, dt, type, indexes) {
+				if (type === "row") {
+					var data = subscribeTable.rows({ selected: true }).data().pluck(0);
+					var price = await method.calPackagePrice(stringToBytes32(deviceID), data.toArray()).call({ from: account });
+					$("#price").text(web3.utils.fromWei(price));
+
+					// do something with the ID of the selected items
+				}
+			});
+
 			$(document).ready(async function () {
 				await load();
-				var dataID = stringToBytes32("<%- dataID %>");
-				getDataByID(dataID, dataInfo);
+
+				$.ajax({
+					url: "/DU/confirm_received_data",
+					data: { trans_id: "<%- trans -%>" },
+					method: "post",
+					success: (res) => {
+						deviceID = res[0].device_id_fk;
+						subscribeTable.clear().draw();
+						res.forEach((element) => {
+							console.log(element);
+							$(".loader-wrapper").fadeOut("slow");
+							linkToTransaction = `<a href= "/DU/confirm_received_data?trans_id=${element.trans_id}"> ${element.trans_id} </a>`;
+							subscribeTable.row
+								.add([stringToBytes32(element.data_id_fk), new Date(element.start_day).toDateString(), new Date(element.end_day).toDateString(), element.confirm == null ? "Not confirm" : "Confirmed"])
+								.draw();
+						});
+					},
+				});
 			});
 		</script>
 	</body>

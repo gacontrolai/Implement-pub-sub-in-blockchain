@@ -1,6 +1,6 @@
 // 0xf17824cb47e4170a7583daa87492df7de4ac0b77;
 // 0xd7d7e14be9baecdb9ff3db1e2fe9376374bc3c52;
-const addressOfContract = "0xBD099BbA224e34fb7273BB267B4A52Ed04c8B950";
+const addressOfContract = "0xaDB801Aa27629d1607152EC1F16281c243D1357D";
 const abi = [
 	{
 		anonymous: false,

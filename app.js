@@ -8,7 +8,6 @@ var indexRouter = require("./routes/index");
 var DORouter = require("./routes/dataOwner");
 var DURouter = require("./routes/dataUser");
 var usersRouter = require("./routes/users");
-var long = require("./routes/routerLong");
 var apiRouter = require("./routes/api");
 
 const subscribeSC = require("./subscribesEventSC.js");
@@ -58,7 +57,6 @@ app.use("/users", usersRouter);
 app.use("/api", apiRouter);
 app.use("/DO", DORouter);
 app.use("/DU", DURouter);
-app.use("/DU/long", long);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
