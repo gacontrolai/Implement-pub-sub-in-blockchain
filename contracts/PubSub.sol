@@ -12,6 +12,8 @@ contract PubSub {
 
     mapping(bytes32 => mapping(bytes32 => string)) rek; // from deviceID to dataID to  rek
 
+    mapping (bytes32 => string) updatedKey; //txID to keyUri
+
     mapping(address => mapping(address => mapping(bytes32 => uint256))) transactionList; // from DO to DU to transactionID to amount
     
     struct Devices {
@@ -54,7 +56,12 @@ contract PubSub {
         string _dataUri,
         string _keyUri
     );
-    event NewKey(bytes32 keyID, string uri);
+
+    event NewKey(
+        address to,
+        bytes32 txID,
+        string keyUri
+    );
 
     event Confirm(
         address indexed from,
@@ -99,6 +106,8 @@ contract PubSub {
             userDevices[deviceID].owner == msg.sender,
             "PubSub: You are not the owner of this device"
         );
+        require(_from < _to,"Pubsub: from must smaller than to");
+        require(_to/1000 <= block.timestamp,"Pubsub: to must smaller than current time");
         require(devicesData[deviceID][dataID].isUsed == false, "Duplicate data ID");
         rek[deviceID][dataID] = keyUri;
         devicesData[deviceID][dataID] = SensorData(true, dataUri, _from, _to);
@@ -107,18 +116,17 @@ contract PubSub {
 
     function updateKey(
         bytes32 deviceID,
-        bytes32 dataID,
+        bytes32 txID,
+        address to,
         string calldata keyUri
     ) public {
         require(
             userDevices[deviceID].owner == msg.sender,
             "Pubsub: You are not the owner"
         );
-        require(
-            devicesData[deviceID][dataID].isUsed == true,
-            "Pubsub: Data id is not correct"
-        );
-        rek[deviceID][dataID] = keyUri;
+        require(transactionList[msg.sender][to][txID] != 0, "PubSub: Transaction not exist");
+        updatedKey[txID] = keyUri;
+        emit NewKey(to, txID, keyUri);
     }
 
     function subscribe(
@@ -198,7 +206,7 @@ contract PubSub {
         );
         Devices memory device = userDevices[deviceID];
         uint256 totalprice = calPackagePrice(deviceID, dataID);
-        // transactionList[device.owner][msg.sender][txId] -= totalprice;
+        transactionList[device.owner][msg.sender][txId] -= totalprice;
         payable(device.owner).transfer(totalprice);
         emit Confirm(msg.sender, device.owner, dataID, totalprice, txId);
     }

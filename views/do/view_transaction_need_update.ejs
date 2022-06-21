@@ -21,10 +21,10 @@
 
 	<body class="g-sidenav-show bg-gray-100">
 		<div class="min-height-300 bg-primary position-absolute w-100"></div>
-		<%- include('sidebar',{"choosing":3}) -%>
+		<%- include('sidebar',{"choosing":5}) -%>
 		<main class="main-content position-relative border-radius-lg">
 			<!-- Navbar -->
-			<%- include('navbar',{pageName: "My device"}) -%>
+			<%- include('navbar',{pageName: "Update Key"}) -%>
 			<!-- End Navbar -->
 			<div class="container-fluid py-4">
 				<div id="listDevice" class="row mt-4">
@@ -198,7 +198,7 @@
 			function ownerDevice(arrOfEvent) {
 				$("#listDevice").empty();
 				arrOfEvent.forEach((event) => {
-					renderNewDevice(event);
+					renderSubscriber(event);
 				});
 				$(".loader-wrapper").fadeOut("slow");
 				if (arrOfEvent.length == 0) {
@@ -213,56 +213,71 @@
 					$("#listDevice").append(emptyMsg);
 				}
 			}
-			function renderNewDevice(event) {
+			function renderSubscriber(event) {
 				var ran = Math.floor(Math.random() * 5);
 				console.log(ran);
-				str1 = `<div class="card col-3">
-				<div class="card-body">
-					<h4 class="card-title">Event register</h4>
-					<p>owner: ${event.returnValues.owner}</p>
-			    <p>id: ${event.returnValues.id}</p>
-			    <p>_describe: ${event.returnValues._describe}</p>
-			    <p>price: ${event.returnValues.price}</p>
-				</div>
-			</div>`;
+				var fromTime = new Date(parseInt(event.start_day)).toDateString();
+				var toTime = new Date(parseInt(event.end_day)).toDateString();
+				function calTotalDate(fromTime, toTime) {
+					if (fromTime > toTime) {
+						return 0;
+					}
+					var duration = toTime - fromTime;
+					var totalDate = duration / 1000 / (60 * 60 * 24);
+					return totalDate;
+				}
+				deviceID = stringToBytes32(event.device_id);
 				str = `<div class="col-xl-4 col-sm-6 mb-xl-0 mb-4 mt-4">
-			         <div class="card">
-			           <div class="card-header pb-1">
-			             <h5><b>OWNER:</b> ${event.returnValues.owner}</h5>
-			           </div>
-			           <div class="card-body">
-			             <div class="row">
-			               <div class="col-8">
-			                 <div class="numbers">
+            <div class="card">
+              <div class="card-header pb-1">
+                <h5><b>Transaction ID:</b> ${event.trans_id}</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-8">
+                    <div class="numbers">
+                      <p class="text-sm mb-0 text-uppercase font-weight-bold">Subscriber</p>
+                      <p class="font-weight-bolder">${event.bc_address}</p>
+                      <p class="text-sm mb-0 text-uppercase font-weight-bold">Device ID</p>
+                      <p class="font-weight-bolder">${deviceID}</p>
 
-			                   <p class="text-sm mb-0 text-uppercase font-weight-bold">Device Id:</p>
-			                   <h5 class="font-weight-bolder">${event.returnValues.id}</h5>
-											<p class="text-sm mb-0 text-uppercase font-weight-bold">Device Name:</p>
-			                   <h5 class="font-weight-bolder">${event.returnValues.deviceName}</h5>
-			                   <p class="text-sm mb-0 text-uppercase font-weight-bold">Describe:</p>
-			                   <p class="card-text"> ${event.returnValues._describe}</p>
-			                   <p class="text-sm mb-0 text-uppercase font-weight-bold">Price:</p>
-			                   <h5 class="font-weight-bolder">${web3.utils.fromWei(event.returnValues.price, "ether")} ETH/day</h5>
-			                 </div>
-			               </div>
-			               <div class="col-4 text-end">
-			                 <div class="icon icon-shape ${colorList[ran]} text-center rounded-circle">
-			                   <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
-			                 </div>
-			               </div>
-			             </div>
-			             <div class="row">
-			               <button class="btn btn-primary col-12" onclick="location.href='/DO/publish_data?deviceID=${event.returnValues.id}';"> Publish Data</button>
-			             </div>
-			           </div>
+					  <p class="text-sm mb-0 text-uppercase font-weight-bold">From:</p>
+                      <p class="card-text">${fromTime}</p>
+
+                      <p class="text-sm mb-0 text-uppercase font-weight-bold">To:</p>
+                      <p class="card-text"> ${toTime}</p>
+
+                      <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Price:</p>
+                      <h5 class="font-weight-bolder">${event.price / 10 ** 6} Ether</h5>
+					 
+                    </div>
+                  </div>
+                  <div class="col-4 text-end">
+                    <div class="icon icon-shape ${colorList[ran]} text-center rounded-circle">
+                      <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                  <div class="row">
+			            <button class="btn btn-primary col-12" onclick="location.href='/DO/update_key?txID=${event.trans_id}';"> Update</button>
 			         </div>
-			       </div>`;
+                </div>
+              </div>
+            </div>
+          </div>`;
 
 				$("#listDevice").append(str);
 			}
 			$(document).ready(async function () {
 				await load();
-				getRegisterDeviceByDO(account, ownerDevice);
+				// getRegisterDeviceByDO(account, ownerDevice);
+				$.ajax({
+					method: "POST",
+					url: "./transaction_need_update",
+					success: (res) => {
+						console.log(res);
+						ownerDevice(res);
+					},
+				});
 			});
 		</script>
 	</body>

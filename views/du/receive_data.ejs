@@ -45,7 +45,7 @@
 								</p>
 								<p class="text-sm mb-0 text-uppercase font-weight-bold">Device Name:</p>
 								<h5 id="deviceName" class="font-weight-bolder"></h5>
-								<p class="text-sm mb-0 text-uppercase font-weight-bold">Decribe:</p>
+								<p class="text-sm mb-0 text-uppercase font-weight-bold">Describe:</p>
 								<p class="card-text" id="describe">Sensor for temperature</p>
 								<p class="text-sm mb-0 text-uppercase font-weight-bold">Price:</p>
 								<div class="numbers">
@@ -322,7 +322,7 @@
 				$("#owner").text(dataOwner);
 				$("#deviceID").text(event.returnValues.id);
 				$("#deviceName").text(event.returnValues.deviceName);
-				$("#describe").text(event.returnValues._decribe);
+				$("#describe").text(event.returnValues._describe);
 				$("#price").text(web3.utils.fromWei(event.returnValues.price, "ether"));
 				$(".loader-wrapper").fadeOut("slow");
 			}

@@ -28,7 +28,7 @@ async function listenPublish(cid) {
 }
 
 async function getIpfs(CID) {
-	for await (const buf of ipfs.cat(CID)) {
+	for await (const buf of await ipfs.cat(CID)) {
 		return buf.toString();
 	}
 }
@@ -96,9 +96,11 @@ router.post("/decrypt_packet", (req, res) => {
 			return res.status(401).send("Wrong password");
 		}
 		console.log("getting ipfs");
-		var data = JSON.parse(await getIpfs(result[0].data_uri));
+		rawData = await getIpfs(result[0].data_uri);
+		console.log(rawData);
+		let data = JSON.parse(await getIpfs(result[0].data_uri));
 		console.log("sk and pass: ", { sk: req.session.sk, pass: req.body.password });
-		var dataUserSK = AES.decrypt(req.session.sk, req.body.password).toString(enc.Utf8);
+		let dataUserSK = AES.decrypt(req.session.sk, req.body.password).toString(enc.Utf8);
 		console.log("First data: ", data);
 		getRek = `select re_key from receive where dataUser_id_fk = ? and data_id_fk= ? `;
 		con.query(getRek, [req.session.userID, req.body.dataID], (err, key) => {
@@ -161,6 +163,15 @@ router.post("/store_confirmed_data", (req, res) => {
 router.post("/getIpfs", async (req, res) => {
 	let result = await getIpfs(req.body.cid);
 	res.send(result);
+});
+
+router.post("/update_data_status", (req, res) => {
+	con.query("UPDATE receive SET confirm = 1 where data_id_fk in ? and dataUser_id_fk = ?", [req.body.dataID, req.session.userID], (err, result) => {
+		if (err) {
+			return res.send(err);
+		}
+		res.send(result);
+	});
 });
 
 module.exports = router;

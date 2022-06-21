@@ -286,7 +286,7 @@
 				dataOwner = event.returnValues.owner;
 				$("#owner").text(dataOwner);
 				$("#deviceID").text(event.returnValues.id);
-				$("#describe").text(event.returnValues._decribe);
+				$("#describe").text(event.returnValues._describe);
 				$("#price").text(web3.utils.fromWei(event.returnValues.price, "ether"));
 				$(".loader-wrapper").fadeOut("slow");
 			}

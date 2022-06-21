@@ -210,7 +210,7 @@
 					<h4 class="card-title">Event register</h4>
 					<p>owner: ${event.returnValues.owner}</p>
 			    <p>id: ${event.returnValues.id}</p>
-			    <p>_decribe: ${event.returnValues._decribe}</p>
+			    <p>_describe: ${event.returnValues._describe}</p>
 			    <p>price: ${event.returnValues.price}</p>
 				</div>
 			</div>`;
@@ -227,8 +227,8 @@
 			                   <h5 class="font-weight-bolder">${event.returnValues.owner}</h5>
 							 <p class="text-sm mb-0 text-uppercase font-weight-bold">Device Name:</p>
 			                   <h5 class="font-weight-bolder">${event.returnValues.deviceName}</h5>
-			                   <p class="text-sm mb-0 text-uppercase font-weight-bold">Decribe:</p>
-			                   <p class="card-text"> ${event.returnValues._decribe}</p>
+			                   <p class="text-sm mb-0 text-uppercase font-weight-bold">Describe:</p>
+			                   <p class="card-text"> ${event.returnValues._describe}</p>
 			                   <p class="text-sm mb-0 text-uppercase font-weight-bold">Price:</p>
 			                   <h5 class="font-weight-bolder">${web3.utils.fromWei(event.returnValues.price, "ether")} ETH/day</h5>
 			                 </div>

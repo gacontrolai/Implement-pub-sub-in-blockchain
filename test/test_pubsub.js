@@ -1,5 +1,4 @@
 const PubSub = artifacts.require("PubSub");
-const helper = require("./helper.js");
 const catchRevert = require("./exceptions.js").catchRevert;
 const catchRevertReason = require("./exceptions.js").catchRevertReason;
 contract("Publish Subscribe", function (accounts) {

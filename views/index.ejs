@@ -1,180 +1,176 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel="stylesheet" href="/stylesheets/style.css" />
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <h2 id="TaiKhoan"></h2>
-    <div class="card-group">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">New Device</h4>
-          <p>Decribe <textarea name="decribe" id="decribe"> </textarea></p>
+	<head>
+		<title><%= title %></title>
+		<link rel="stylesheet" href="/stylesheets/style.css" />
+		<!-- Bootstrap CSS -->
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+			integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+			crossorigin="anonymous"
+		/>
+	</head>
+	<body>
+		<h1><%= title %></h1>
+		<p>Welcome to <%= title %></p>
+		<h2 id="TaiKhoan"></h2>
+		<div class="card-group">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">New Device</h4>
+					<p>Describe <textarea name="decribe" id="decribe"> </textarea></p>
 
-          <p>Device ID <input type="text" name="deviceID" id="deviceID" /></p>
+					<p>Device ID <input type="text" name="deviceID" id="deviceID" /></p>
 
-          <p>Price: <input type="number" name="price" id="price" /></p>
-          <button onclick="_register()">Register</button>
-          <p id="bytesID"></p>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">Event</h4>
-          <div style="height: 300px; overflow-y: scroll">
-            <div class="row" id="displayEvent"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="card-group">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">Create Rek</h4>
-          <form method="post" action="/getKey" target="#">
-            <p>Owner SK: <input type="text" name="sk" id="sk" /></p>
-            <p>Pk<input type="text" name="pk" id="pk" /></p>
-            <p>Subcriber</p>
-            <input type="text" id="listSub" name="listSub" />
+					<p>Price: <input type="number" name="price" id="price" /></p>
+					<button onclick="_register()">Register</button>
+					<p id="bytesID"></p>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Event</h4>
+					<div style="height: 300px; overflow-y: scroll">
+						<div class="row" id="displayEvent"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-group">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Create Rek</h4>
+					<form method="post" action="/getKey" target="#">
+						<p>Owner SK: <input type="text" name="sk" id="sk" /></p>
+						<p>Pk<input type="text" name="pk" id="pk" /></p>
+						<p>Subcriber</p>
+						<input type="text" id="listSub" name="listSub" />
 
-            <button type="submit">Get Rek</button>
-          </form>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">Encrypt data and post to IPFS</h4>
-          <form method="POST" enctype="multipart/form-data" action="/uploadfile">
-            <p>Public key owner <input type="text" name="pk" id="" /></p>
-            <p>file</p>
-            <input type="file" name="myFile" id="file" accept="application/JSON" />
-            <button type="submit">Submit</button>
-          </form>
-        </div>
-      </div>
-    </div>
-    <div class="card-group">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">Create key on SC</h4>
-          <form>
-            <p>Key ID</p>
-            <input type="text" id="keyID" />
-            <p>Subcriber</p>
-            <p>uri</p>
-            <input type="text" id="uri" />
-          </form>
-          <button onclick="createRK()">Create key on SC</button>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">Publish</h4>
-          <form method="post" action="/getKey" target="#">
-            <p>deviceID : <input type="text" name="deviceID" id="deviceID2" /></p>
-            <p>dataID<input type="text" name="dataID" id="dataID" /></p>
-            <p>keyID : <input type="text" name="sk" id="keyID2" /></p>
-            <p>from<input type="text" name="pk" id="from" /></p>
-            <p>to : <input type="text" name="sk" id="to" /></p>
-            <p>uri<input type="text" name="pk" id="uri2" /></p>
-          </form>
-          <button onclick="pub()">Publish</button>
-        </div>
-      </div>
-    </div>
-  </body>
-  <script
-    src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"
-  ></script>
-  <script src="/javascripts/rek.js"></script>
-  <!-- web3 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.4.0/web3.min.js"></script>
-  <script src="/javascripts/metadata.js"></script>
-  <script src="/javascripts/contract_API.js"></script>
-  <script src="/javascripts/init.js"></script>
+						<button type="submit">Get Rek</button>
+					</form>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Encrypt data and post to IPFS</h4>
+					<form method="POST" enctype="multipart/form-data" action="/uploadfile">
+						<p>Public key owner <input type="text" name="pk" id="" /></p>
+						<p>file</p>
+						<input type="file" name="myFile" id="file" accept="application/JSON" />
+						<button type="submit">Submit</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="card-group">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Create key on SC</h4>
+					<form>
+						<p>Key ID</p>
+						<input type="text" id="keyID" />
+						<p>Subcriber</p>
+						<p>uri</p>
+						<input type="text" id="uri" />
+					</form>
+					<button onclick="createRK()">Create key on SC</button>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Publish</h4>
+					<form method="post" action="/getKey" target="#">
+						<p>deviceID : <input type="text" name="deviceID" id="deviceID2" /></p>
+						<p>dataID<input type="text" name="dataID" id="dataID" /></p>
+						<p>keyID : <input type="text" name="sk" id="keyID2" /></p>
+						<p>from<input type="text" name="pk" id="from" /></p>
+						<p>to : <input type="text" name="sk" id="to" /></p>
+						<p>uri<input type="text" name="pk" id="uri2" /></p>
+					</form>
+					<button onclick="pub()">Publish</button>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"
+	></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"
+	></script>
+	<script src="/javascripts/rek.js"></script>
+	<!-- web3 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.4.0/web3.min.js"></script>
+	<script src="/javascripts/metadata.js"></script>
+	<script src="/javascripts/contract_API.js"></script>
+	<script src="/javascripts/init.js"></script>
 
-  <script src="/javascripts/subcribeEvent.js"></script>
-  <script>
-    function newdevice(event) {
-      str = `<div class="card col-3">
+	<script src="/javascripts/subcribeEvent.js"></script>
+	<script>
+		function newdevice(event) {
+			str = `<div class="card col-3">
 				<div class="card-body">
 					<h4 class="card-title">Event register</h4>
 					<p>owner: ${event.returnValues.owner}</p>
 			    <p>id: ${event.returnValues.id}</p>
-			    <p>_decribe: ${event.returnValues._decribe}</p>
+			    <p>_describe: ${event.returnValues._describe}</p>
 			    <p>price: ${event.returnValues.price}</p>
 				</div>
 			</div>`;
-      $("#displayEvent").append(str);
-    }
-    $(document).ready(async function () {
-      await load();
-      subRegister(newdevice);
-    });
-  </script>
+			$("#displayEvent").append(str);
+		}
+		$(document).ready(async function () {
+			await load();
+			subRegister(newdevice);
+		});
+	</script>
 
-  [ { id: 1 price:1 decribe:sadasd }, { id: 1 price:1 decribe:sadasd } ]
+	[ { id: 1 price:1 decribe:sadasd }, { id: 1 price:1 decribe:sadasd } ]
 
-  <script>
-    async function _register() {
-      decribe = $("#decribe")[0].value;
-      deviceID = $("#deviceID")[0].value;
-      price = $("#price")[0].value;
-      console.log(price);
-      console.log(deviceID);
-      console.log(decribe);
-      let idInBytes = web3.utils.padLeft(web3.utils.fromAscii(deviceID), 64);
-      await register(idInBytes, decribe, price);
-      $("#bytesID")[0].innerHTML = "ID: " + idInBytes;
-    }
+	<script>
+		async function _register() {
+			decribe = $("#decribe")[0].value;
+			deviceID = $("#deviceID")[0].value;
+			price = $("#price")[0].value;
+			console.log(price);
+			console.log(deviceID);
+			console.log(decribe);
+			let idInBytes = web3.utils.padLeft(web3.utils.fromAscii(deviceID), 64);
+			await register(idInBytes, decribe, price);
+			$("#bytesID")[0].innerHTML = "ID: " + idInBytes;
+		}
 
-    async function createRK() {
-      keyID = $("#keyID")[0].value;
-      uri = $("#uri")[0].value;
-      let idInBytes = web3.utils.padLeft(web3.utils.fromAscii(keyID), 64);
-      console.log("keyID:" + idInBytes);
-      await createKey(idInBytes, uri);
-    }
+		async function createRK() {
+			keyID = $("#keyID")[0].value;
+			uri = $("#uri")[0].value;
+			let idInBytes = web3.utils.padLeft(web3.utils.fromAscii(keyID), 64);
+			console.log("keyID:" + idInBytes);
+			await createKey(idInBytes, uri);
+		}
 
-    async function pub() {
-      deviceID = $("#deviceID2")[0].value;
-      dataID = $("#dataID")[0].value;
-      keyID = $("#keyID2")[0].value;
-      from = $("#from")[0].value;
-      to = $("#to")[0].value;
-      uri = $("#uri2")[0].value;
-      let deviceInBytes = web3.utils.padLeft(web3.utils.fromAscii(deviceID), 64);
-      let dataInBytes = web3.utils.padLeft(web3.utils.fromAscii(dataID), 64);
-      let keyInBytes = web3.utils.padLeft(web3.utils.fromAscii(keyID), 64);
-      await method.publish(deviceInBytes, dataInBytes, keyInBytes, from, to, uri).send({ from: account });
-    }
+		async function pub() {
+			deviceID = $("#deviceID2")[0].value;
+			dataID = $("#dataID")[0].value;
+			keyID = $("#keyID2")[0].value;
+			from = $("#from")[0].value;
+			to = $("#to")[0].value;
+			uri = $("#uri2")[0].value;
+			let deviceInBytes = web3.utils.padLeft(web3.utils.fromAscii(deviceID), 64);
+			let dataInBytes = web3.utils.padLeft(web3.utils.fromAscii(dataID), 64);
+			let keyInBytes = web3.utils.padLeft(web3.utils.fromAscii(keyID), 64);
+			await method.publish(deviceInBytes, dataInBytes, keyInBytes, from, to, uri).send({ from: account });
+		}
 
-    function decode(rk, obj) {
-      reEncryption(rk, obj);
-      let decryptData = decryptData(sk_B, obj);
-      console.log(decryptData);
-    }
-  </script>
+		function decode(rk, obj) {
+			reEncryption(rk, obj);
+			let decryptData = decryptData(sk_B, obj);
+			console.log(decryptData);
+		}
+	</script>
 </html>

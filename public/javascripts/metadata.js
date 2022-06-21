@@ -1,56 +1,7 @@
 // 0xf17824cb47e4170a7583daa87492df7de4ac0b77;
 // 0xd7d7e14be9baecdb9ff3db1e2fe9376374bc3c52;
-const addressOfContract = "0xaDB801Aa27629d1607152EC1F16281c243D1357D";
+const addressOfContract = "0xA13CBc6E8d08A8eF64106c4107132a408595b72A";
 const abi = [
-	{
-		anonymous: false,
-		inputs: [
-			{
-				indexed: true,
-				internalType: "address",
-				name: "from",
-				type: "address",
-			},
-			{
-				indexed: true,
-				internalType: "address",
-				name: "to",
-				type: "address",
-			},
-			{
-				indexed: true,
-				internalType: "bytes32",
-				name: "deviceID",
-				type: "bytes32",
-			},
-			{
-				indexed: false,
-				internalType: "uint256",
-				name: "txID",
-				type: "uint256",
-			},
-			{
-				indexed: false,
-				internalType: "bytes32[]",
-				name: "dataID",
-				type: "bytes32[]",
-			},
-			{
-				indexed: false,
-				internalType: "uint256",
-				name: "price",
-				type: "uint256",
-			},
-			{
-				indexed: false,
-				internalType: "string",
-				name: "pk",
-				type: "string",
-			},
-		],
-		name: "BuyPackage",
-		type: "event",
-	},
 	{
 		anonymous: false,
 		inputs: [
@@ -136,14 +87,20 @@ const abi = [
 		inputs: [
 			{
 				indexed: false,
+				internalType: "address",
+				name: "to",
+				type: "address",
+			},
+			{
+				indexed: false,
 				internalType: "bytes32",
-				name: "keyID",
+				name: "txID",
 				type: "bytes32",
 			},
 			{
 				indexed: false,
 				internalType: "string",
-				name: "uri",
+				name: "keyUri",
 				type: "string",
 			},
 		],
@@ -174,7 +131,7 @@ const abi = [
 			{
 				indexed: false,
 				internalType: "string",
-				name: "_decribe",
+				name: "_describe",
 				type: "string",
 			},
 			{
@@ -281,7 +238,7 @@ const abi = [
 			},
 			{
 				internalType: "string",
-				name: "_decribe",
+				name: "_describe",
 				type: "string",
 			},
 			{
@@ -362,8 +319,13 @@ const abi = [
 			},
 			{
 				internalType: "bytes32",
-				name: "dataID",
+				name: "txID",
 				type: "bytes32",
+			},
+			{
+				internalType: "address",
+				name: "to",
+				type: "address",
 			},
 			{
 				internalType: "string",
@@ -448,6 +410,36 @@ const abi = [
 				name: "dataID",
 				type: "bytes32[]",
 			},
+		],
+		name: "calPackagePrice2",
+		outputs: [
+			{
+				internalType: "uint256",
+				name: "",
+				type: "uint256",
+			},
+			{
+				internalType: "uint256",
+				name: "",
+				type: "uint256",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+		constant: true,
+	},
+	{
+		inputs: [
+			{
+				internalType: "bytes32",
+				name: "deviceID",
+				type: "bytes32",
+			},
+			{
+				internalType: "bytes32[]",
+				name: "dataID",
+				type: "bytes32[]",
+			},
 			{
 				internalType: "bytes32",
 				name: "txId",
@@ -475,9 +467,31 @@ const abi = [
 		name: "getData",
 		outputs: [
 			{
-				internalType: "string",
+				components: [
+					{
+						internalType: "bool",
+						name: "isUsed",
+						type: "bool",
+					},
+					{
+						internalType: "string",
+						name: "uri",
+						type: "string",
+					},
+					{
+						internalType: "uint256",
+						name: "from",
+						type: "uint256",
+					},
+					{
+						internalType: "uint256",
+						name: "to",
+						type: "uint256",
+					},
+				],
+				internalType: "struct PubSub.SensorData",
 				name: "",
-				type: "string",
+				type: "tuple",
 			},
 		],
 		stateMutability: "view",
@@ -503,6 +517,83 @@ const abi = [
 				internalType: "string",
 				name: "",
 				type: "string",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+		constant: true,
+	},
+	{
+		inputs: [
+			{
+				internalType: "address",
+				name: "requester",
+				type: "address",
+			},
+			{
+				internalType: "address",
+				name: "owner",
+				type: "address",
+			},
+			{
+				internalType: "uint256",
+				name: "from",
+				type: "uint256",
+			},
+			{
+				internalType: "uint256",
+				name: "to",
+				type: "uint256",
+			},
+		],
+		name: "getTx",
+		outputs: [
+			{
+				internalType: "bytes32",
+				name: "",
+				type: "bytes32",
+			},
+		],
+		stateMutability: "pure",
+		type: "function",
+		constant: true,
+	},
+	{
+		inputs: [
+			{
+				internalType: "bytes32",
+				name: "deviceID",
+				type: "bytes32",
+			},
+		],
+		name: "getDevice",
+		outputs: [
+			{
+				components: [
+					{
+						internalType: "address",
+						name: "owner",
+						type: "address",
+					},
+					{
+						internalType: "string",
+						name: "name",
+						type: "string",
+					},
+					{
+						internalType: "string",
+						name: "describe",
+						type: "string",
+					},
+					{
+						internalType: "uint256",
+						name: "pricePerDay",
+						type: "uint256",
+					},
+				],
+				internalType: "struct PubSub.Devices",
+				name: "",
+				type: "tuple",
 			},
 		],
 		stateMutability: "view",

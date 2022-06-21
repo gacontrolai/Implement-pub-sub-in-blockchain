@@ -69,3 +69,13 @@ function getSelectedDevices(listOFDevices, my_function) {
 		})
 		.then(my_function);
 }
+
+function getSubscriptionBytxID(params) {
+	contract
+		.getPastEvents("Subscribe", {
+			filter: { to: dataOwner },
+			fromBlock: 0,
+			toBlock: "latest",
+		})
+		.then(my_function);
+}

@@ -70,7 +70,7 @@
 												<div style="height: 500px; width: 100%; overflow-y: scroll; white-space: pre-wrap" class="bg-gray-200 p-3">
 													<div class="container" id="showData">Display raw Data</div>
 												</div>
-												<button class="btn btn-primary">Download</button>
+												<button class="btn btn-primary" id="download">Download</button>
 											</div>
 										</div>
 									</div>
@@ -281,7 +281,10 @@
 					},
 				});
 			});
-			$("#download").click((event) => {});
+			$("#download").click((event) => {
+				data = $("#showData").text();
+				download("<%- dataID %>.txt", data);
+			});
 
 			function dataInfo(events) {
 				let event = events[0];
